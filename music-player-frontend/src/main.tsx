@@ -25,7 +25,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <QueryClientProvider client={queryClient}>
         <App />
         <ToastContainer
-          autoClose={false}
           draggable
           theme="dark"
           toastStyle={{ borderRadius: ".5rem" }}
