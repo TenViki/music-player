@@ -6,6 +6,7 @@ import React, { useRef, useState } from "react";
 import { loginRequest, signupRequest } from "../../api/auth";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { TokenManager } from "../../utils/tokenmanager";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -48,6 +49,7 @@ const Login = () => {
     setLoading(true);
     try {
       const data = await loginRequest(email, password);
+      TokenManager.setToken(data.token!);
       toast.success(`Welcome ${data.name}!`);
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
@@ -64,6 +66,7 @@ const Login = () => {
     setLoading(true);
     try {
       const data = await signupRequest(email, username, password);
+      TokenManager.setToken(data.token!);
       toast.success(`Welcome ${data.name}! You just made an account!`);
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
