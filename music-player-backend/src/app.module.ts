@@ -6,6 +6,7 @@ import { AuthModule } from "./auth/auth.module";
 import { APP_PIPE } from "@nestjs/core";
 import { ValidationPipeCheck } from "./interceptors/validation.pipe";
 import { ConfigModule } from "@nestjs/config";
+import { SongsModule } from './songs/songs.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ConfigModule } from "@nestjs/config";
       synchronize: true,
     }),
     AuthModule,
+    SongsModule,
   ],
   controllers: [AppController],
   providers: [
