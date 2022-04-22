@@ -19,5 +19,25 @@ html, body, #root, .app {
 
 body {
   background-color: #121212;
+  color: #fff;
+  touch-action: none
 }
 
+.page {
+  padding: max(env(safe-area-inset-top), 1rem) calc(env(safe-area-inset-right) + 1rem) max(env(safe-area-inset-bottom), 1rem) calc(env(safe-area-inset-left) + 1rem);
+
+  .page-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .button{
+      flex-grow: 0;
+      width: fit-content;
+    }
+  }
+}
+
+h1 {
+  font-weight: 100;
+}

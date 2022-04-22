@@ -7,6 +7,7 @@ import { TokenManager } from "./utils/tokenmanager";
 import { Route, Routes, useNavigate } from "react-router";
 import { useQuery } from "react-query";
 import { meRequest, User } from "./api/auth";
+import Playlist from "./pages/playlist/Playlist";
 
 export const UserContext = React.createContext<{
   user: User | undefined;
@@ -42,6 +43,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/playlist" element={<Playlist />} />
         </Routes>
       </div>
     </UserContext.Provider>
