@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { UserContext } from "../../App";
 import Button from "../../components/button/Button";
 import { TokenManager } from "../../utils/tokenmanager";
+import "./playlist.scss";
+import noData from "../../assets/no_data.svg";
 
 export interface Song {
   id: string;
@@ -32,6 +34,18 @@ const Playlist = () => {
           }}
           color="#c0392b"
         />
+      </div>
+
+      <div className="page-content">
+        {playlist.length === 0 ? (
+          <div className="empty-playlist">
+            <img src={noData} alt="" />
+            <h2>Your playlist is empty</h2>
+            <Button text="Upload a song" onClick={() => {}} />
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );

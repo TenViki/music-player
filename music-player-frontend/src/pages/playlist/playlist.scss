@@ -1,0 +1,22 @@
+.empty-playlist{
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5rem;
+
+  h2 {
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+
+  img {
+    width: min(70%, 30rem);
+    margin-bottom: 1rem;
+  }
+
+  .button {
+    width: fit-content;
+  }
+}

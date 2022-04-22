@@ -23,8 +23,15 @@ body {
   touch-action: none
 }
 
+.app {
+  display: flex;
+}
+
 .page {
   padding: max(env(safe-area-inset-top), 1rem) calc(env(safe-area-inset-right) + 1rem) max(env(safe-area-inset-bottom), 1rem) calc(env(safe-area-inset-left) + 1rem);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 
   .page-header{
     display: flex;
@@ -35,6 +42,12 @@ body {
       flex-grow: 0;
       width: fit-content;
     }
+  }
+
+  .page-content{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
   }
 }
 
