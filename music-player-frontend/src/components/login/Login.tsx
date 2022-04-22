@@ -7,6 +7,7 @@ import { loginRequest, signupRequest } from "../../api/auth";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { TokenManager } from "../../utils/tokenmanager";
+import { UserContext } from "../../App";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -20,6 +21,8 @@ const Login = () => {
   const loginRef = useRef<HTMLFormElement>(null);
   const signupRef = useRef<HTMLFormElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  const { setUser } = React.useContext(UserContext);
 
   React.useEffect(() => {
     if (!loginError) return;
@@ -50,7 +53,8 @@ const Login = () => {
     try {
       const data = await loginRequest(email, password);
       TokenManager.setToken(data.token!);
-      toast.success(`Welcome ${data.name}!`);
+      setUser(data);
+      toast.success(`Login was successful!`);
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
         setLoginError(error?.response?.data.message);
@@ -66,8 +70,9 @@ const Login = () => {
     setLoading(true);
     try {
       const data = await signupRequest(email, username, password);
+      setUser(data);
       TokenManager.setToken(data.token!);
-      toast.success(`Welcome ${data.name}! You just made an account!`);
+      toast.success(`Account created successfully!`);
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
         setSingupError(error?.response?.data.message);

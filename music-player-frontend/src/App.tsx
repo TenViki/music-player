@@ -9,9 +9,10 @@ import { BrowserRouter } from "react-router-dom";
 import { useQuery } from "react-query";
 import { meRequest, User } from "./api/auth";
 
-export const UserContext = React.createContext<
-  [User | undefined, React.Dispatch<React.SetStateAction<User | undefined>>]
->([undefined, () => {}]);
+export const UserContext = React.createContext<{
+  user: User | undefined;
+  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+}>({ user: undefined, setUser: () => {} });
 
 function App() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ function App() {
   }, [user]);
 
   return (
-    <UserContext.Provider value={[user, setUser]}>
+    <UserContext.Provider value={{ user, setUser }}>
       <div className="app">
         <ToastContainer
           theme="dark"
