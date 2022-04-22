@@ -1,0 +1,15 @@
+{
+    "background_color": "#2980b9",
+    "description": "Spotify clone lol",
+    "display": "fullscreen",
+    "icons": [
+      {
+        "src": "/icon_168x168.png",
+        "sizes": "168x168",
+        "type": "image/png"
+      }
+    ],
+    "name": "Listen Anynwhere",
+    "short_name": "Listen Anywhere",
+    "start_url": "/"
+  }
