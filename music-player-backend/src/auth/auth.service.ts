@@ -51,7 +51,6 @@ export class AuthService {
       },
       process.env.JWT_KEY,
     );
-    console.log(process.env);
     return token;
   }
 }
