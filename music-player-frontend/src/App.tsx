@@ -1,4 +1,3 @@
-import { Slide, ToastContainer } from "react-toastify";
 import Login from "./pages/login/Login";
 import "./scss/styles.scss";
 import "react-toastify/dist/ReactToastify.css";
@@ -35,12 +34,6 @@ function App() {
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <div className="app">
-        <ToastContainer
-          theme="dark"
-          toastStyle={{ borderRadius: ".5rem" }}
-          transition={Slide}
-        />
-
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/playlist" element={<Playlist />} />
