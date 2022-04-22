@@ -1,0 +1,23 @@
+:root {
+  font-size: 18px;
+  box-sizing: border-box;
+}
+
+.custom-tap-highlight {
+  -webkit-tap-highlight-color: transparent;
+}
+
+*{
+  margin: 0;
+  font-family: "Nunito", sans-serif;
+}
+
+html, body, #root, .app {
+  -webkit-tap-highlight-color: transparent;
+  height: 100%;
+}
+
+body {
+  background-color: red;
+}
+
