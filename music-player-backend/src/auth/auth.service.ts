@@ -9,7 +9,7 @@ import { LoginDto } from "src/interceptors/login.dto";
 import { Repository } from "typeorm";
 import * as bc from "bcrypt";
 import { RegisterDto } from "src/interceptors/signup.dto";
-import { NotFoundError } from "rxjs";
+import * as jwt from "jsonwebtoken";
 
 @Injectable()
 export class AuthService {
@@ -25,7 +25,7 @@ export class AuthService {
     if (!isPasswordValid)
       throw new BadRequestException("Password does not match");
 
-    return user;
+    return { ...user, token: this.createToken(user) };
   }
 
   async register(regDto: RegisterDto) {
@@ -41,6 +41,17 @@ export class AuthService {
       password: hashedPassword,
     });
     await this.repo.save(newUser);
-    return newUser;
+    return { ...newUser, token: this.createToken(newUser) };
+  }
+
+  createToken(user: User) {
+    const token = jwt.sign(
+      {
+        id: user.id,
+      },
+      process.env.JWT_KEY,
+    );
+    console.log(process.env);
+    return token;
   }
 }

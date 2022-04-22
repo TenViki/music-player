@@ -5,9 +5,14 @@ import { AuthService } from "./auth/auth.service";
 import { AuthModule } from "./auth/auth.module";
 import { APP_PIPE } from "@nestjs/core";
 import { ValidationPipeCheck } from "./interceptors/validation.pipe";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
     TypeOrmModule.forRoot({
       type: "postgres",
       host: "localhost",
