@@ -2,30 +2,49 @@ import { Slide, ToastContainer } from "react-toastify";
 import Login from "./components/login/Login";
 import "./scss/styles.scss";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { TokenManager } from "./utils/tokenmanager";
-import { Route, Routes } from "react-router";
+import { Route, Routes, useNavigate } from "react-router";
 import { BrowserRouter } from "react-router-dom";
+import { useQuery } from "react-query";
+import { meRequest, User } from "./api/auth";
+
+export const UserContext = React.createContext<
+  [User | undefined, React.Dispatch<React.SetStateAction<User | undefined>>]
+>([undefined, () => {}]);
 
 function App() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<User>();
+
+  const { refetch: refetchUser } = useQuery("user", meRequest, {
+    enabled: !!TokenManager.token,
+    onSuccess: setUser,
+  });
+
   useEffect(() => {
     TokenManager.loadToken();
+    refetchUser();
   }, []);
 
-  return (
-    <div className="app">
-      <ToastContainer
-        theme="dark"
-        toastStyle={{ borderRadius: ".5rem" }}
-        transition={Slide}
-      />
+  useEffect(() => {
+    if (user) navigate("/playlists");
+  }, [user]);
 
-      <BrowserRouter>
+  return (
+    <UserContext.Provider value={[user, setUser]}>
+      <div className="app">
+        <ToastContainer
+          theme="dark"
+          toastStyle={{ borderRadius: ".5rem" }}
+          transition={Slide}
+        />
+
         <Routes>
           <Route path="/" element={<Login />} />
         </Routes>
-      </BrowserRouter>
-    </div>
+      </div>
+    </UserContext.Provider>
   );
 }
 
