@@ -1,11 +1,10 @@
 import { Slide, ToastContainer } from "react-toastify";
-import Login from "./components/login/Login";
+import Login from "./pages/login/Login";
 import "./scss/styles.scss";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
 import { TokenManager } from "./utils/tokenmanager";
 import { Route, Routes, useNavigate } from "react-router";
-import { BrowserRouter } from "react-router-dom";
 import { useQuery } from "react-query";
 import { meRequest, User } from "./api/auth";
 
@@ -29,7 +28,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (user) navigate("/playlists");
+    if (user) navigate("/playlist");
   }, [user]);
 
   return (

@@ -1,7 +1,7 @@
 import "./Login.scss";
 import logo from "../../assets/logo.png";
-import Textfield from "../textfield/Textfield";
-import Button from "../button/Button";
+import Textfield from "../../components/textfield/Textfield";
+import Button from "../../components/button/Button";
 import React, { useRef, useState } from "react";
 import { loginRequest, signupRequest } from "../../api/auth";
 import { toast } from "react-toastify";
