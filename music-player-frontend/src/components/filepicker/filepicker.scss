@@ -3,4 +3,15 @@
     font-weight: 300;
     margin-bottom: 1rem;
   }
+
+  .file-info-line{
+    font-size: .9rem;
+    color: #888;
+    span {
+      display: block;
+      font-size: 1rem;
+      color: #fff;
+    }
+    margin-bottom: .3rem;
+  }
 }
