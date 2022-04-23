@@ -41,6 +41,7 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
     if (!currentSong || !audio.current) return;
     audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
     audio.current.play();
+    setCurrentTime(0);
     setPaused(false);
     setQueue(processPlaylist(playlist));
   }, [currentSong]);
