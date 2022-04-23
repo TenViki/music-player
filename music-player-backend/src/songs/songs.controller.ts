@@ -5,7 +5,7 @@ import { AuthGuard } from "src/guards/auth.guard";
 import { Serialize } from "src/interceptors/serialize.interceptor";
 import { SongsService } from "./songs.service";
 import { SpotifySongDto } from "./spotify-song.dto";
-import { UploadSongDto } from "./upload-song.dto";
+import { AddSongDto } from "./upload-song.dto";
 
 @Controller("songs")
 export class SongsController {
@@ -13,11 +13,8 @@ export class SongsController {
 
   @Post("/")
   @UseGuards(AuthGuard)
-  async uploadSong(
-    @Body() songObject: UploadSongDto,
-    @CurrentUser() user: User,
-  ) {
-    return this.songsService.uploadSong(songObject, user);
+  async uploadSong(@Body() songObject: AddSongDto, @CurrentUser() user: User) {
+    return this.songsService.addSong(songObject, user);
   }
 
   @Get("/")
