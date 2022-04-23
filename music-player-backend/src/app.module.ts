@@ -6,13 +6,16 @@ import { AuthModule } from "./auth/auth.module";
 import { APP_PIPE } from "@nestjs/core";
 import { ValidationPipeCheck } from "./interceptors/validation.pipe";
 import { ConfigModule } from "@nestjs/config";
-import { SongsModule } from './songs/songs.module';
+import { SongsModule } from "./songs/songs.module";
+import { SpotifyModule } from "./spotify/spotify.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env`,
+      envFilePath: `.env.prod`,
     }),
     TypeOrmModule.forRoot({
       type: "postgres",
@@ -26,6 +29,7 @@ import { SongsModule } from './songs/songs.module';
     }),
     AuthModule,
     SongsModule,
+    SpotifyModule,
   ],
   controllers: [AppController],
   providers: [
