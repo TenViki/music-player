@@ -29,7 +29,6 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
     if (!currentSong || !audio.current) return;
     audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
     audio.current.play();
-    console.log("Ayo wut");
 
     const interval = setInterval(() => {
       setCurrentTime(audio.current?.currentTime || 0);
@@ -40,15 +39,11 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
 
   useEffect(() => {
     if (!audio.current) return;
-    // if (paused) {
-    //   audio.current.pause();
-    // } else {
-    //   audio.current.play();
-    // }
-
-    console.log(audio.current.currentTime);
-    audio.current.currentTime = 100;
-    console.log(audio.current.currentTime);
+    if (paused) {
+      audio.current.pause();
+    } else {
+      audio.current.play();
+    }
   }, [paused]);
 
   if (!currentSong)
@@ -107,16 +102,13 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
               max={1}
               step={0.0001}
               className="player-progress-bar"
-              value={(audio.current?.currentTime || 0) / currentSong.duration}
+              value={(currentTime || 0) / currentSong.duration}
               onChange={(e) => {
+                setCurrentTime(+e.target.value * currentSong.duration);
+              }}
+              onMouseUp={() => {
                 if (!audio.current) return;
-                audio.current.currentTime = 5;
-
-                console.log(
-                  e.target.value,
-                  currentSong.duration,
-                  +e.target.value * currentSong.duration
-                );
+                audio.current.currentTime = currentTime;
               }}
             />
             {formatTime(currentSong?.duration)}
