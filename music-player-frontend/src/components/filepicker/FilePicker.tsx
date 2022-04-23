@@ -1,4 +1,5 @@
 import React from "react";
+import { formatSize } from "../../utils/size";
 import Button from "../button/Button";
 import SwipeCard from "../swipecard/SwipeCard";
 import Textfield from "../textfield/Textfield";
@@ -24,7 +25,7 @@ const FilePicker: React.FC<FilePickerProps> = ({ file, onClose, setFile }) => {
             File name: <span>{file ? file.name : "No file selected"}</span>
           </div>
           <div className="file-info-line">
-            File size: <span>{file ? file.size : 0}</span>
+            File size: <span>{file ? formatSize(file.size) : 0}</span>
           </div>
 
           <Textfield
