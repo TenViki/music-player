@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./swipecard.scss";
 
 interface SwipeCardProps {
@@ -18,6 +18,13 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
   const [currentY, setCurrentY] = React.useState(0);
   const [dragging, setDragging] = React.useState(false);
   const cardRef = React.useRef<HTMLDivElement>(null);
+  const [belowTreshold, setBelowTreshold] = React.useState(false);
+
+  useEffect(() => {
+    if (belowTreshold && "vibrate" in window.navigator) {
+      window.navigator.vibrate(50);
+    }
+  }, [belowTreshold]);
 
   const handleOverlayClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
     const target = e.target as HTMLDivElement;
@@ -35,6 +42,12 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
   const onTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
     if (!dragging) return;
     setCurrentY(e.touches[0].clientY);
+
+    const moveScore =
+      Math.max(currentY - originY, 0) / (cardRef.current?.clientHeight || 1);
+    if (belowTreshold !== moveScore > closePercentage / 100) {
+      setBelowTreshold(moveScore > closePercentage / 100);
+    }
   };
 
   const onTouchEnd: React.TouchEventHandler<HTMLDivElement> = (e) => {
