@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { AddSongDto } from "./upload-song.dto";
 import * as mm from "music-metadata/lib/core";
 import { User } from "src/entities/user.entity";
-import * as fs from "fs";
+import * as fs from "fs/promises";
 import { SpotifyService } from "src/spotify/spotify.service";
 import spdl from "spdl-core";
 import * as toArray from "stream-to-array";
@@ -22,33 +22,38 @@ export class SongsService {
   }
 
   async addSong(songObject: AddSongDto, user: User) {
-    await this.spotifyService.download(songObject.id);
+    let buffer: Buffer;
+    try {
+      buffer = await fs.readFile("./files/" + songObject.id + ".mp3");
+    } catch {
+      await this.spotifyService.download(songObject.id);
+    }
 
-    // const metadata = await mm.parseBuffer(buffer);
-    // console.log(metadata);
+    buffer = await fs.readFile("./files/" + songObject.id + ".mp3");
 
-    // const filename = Math.random().toString(36).substring(2, 15) + ".bin";
-    // const filepath = `./files/${filename}`;
+    const metadata = await mm.parseBuffer(buffer);
 
-    // // Write buffer to file
-    // await fs.writeFile(filepath, buffer);
+    const trackData = await this.spotifyService.getTrack(songObject.id);
+    console.log(trackData);
 
-    // // Create song object
-    // const song = this.repo.create({
-    //   title: songObject.title,
-    //   artist: songObject.artist,
-    //   duration: Math.floor(metadata.format.duration),
-    //   cover: songObject.cover,
-    //   bitrate: metadata.format.bitrate,
-    //   sampleRate: metadata.format.sampleRate,
-    //   size: buffer.length,
-    //   lossless: metadata.format.lossless,
-    //   file: filename,
-    //   user,
-    // });
+    // Create song object
+    const song = this.repo.create({
+      title: trackData.name,
+      artist: trackData.artists.map((a) => a.name).join(", "),
+      duration: Math.floor(metadata.format.duration),
+      cover: trackData.album.images[0]?.url || "",
+      bitrate: metadata.format.bitrate,
+      sampleRate: metadata.format.sampleRate,
+      size: buffer.length,
+      lossless: metadata.format.lossless,
+      file: songObject.id + ".mp3",
+      user,
+      channels: metadata.format.numberOfChannels,
+      format: metadata.format.container,
+    });
 
-    // // Save song to database
-    // return this.repo.save(song);
+    // Save song to database
+    return this.repo.save(song);
   }
 
   async search(query: string) {

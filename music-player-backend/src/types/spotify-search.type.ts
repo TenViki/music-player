@@ -58,7 +58,7 @@ export interface ExternalUrls4 {
   spotify: string;
 }
 
-export interface Item {
+export interface Track {
   album: Album;
   artists: Artist2[];
   available_markets: string[];
@@ -80,7 +80,7 @@ export interface Item {
 
 export interface Tracks {
   href: string;
-  items: Item[];
+  items: Track[];
   limit: number;
   next?: any;
   offset: number;

@@ -33,6 +33,12 @@ export class Song {
   @Column()
   file: string;
 
+  @Column()
+  channels: number;
+
+  @Column()
+  format: string;
+
   @ManyToOne(() => User, (user) => user.songs)
   user: User;
 }
