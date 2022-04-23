@@ -11,6 +11,10 @@ import * as fs from "fs/promises";
 export class SongsService {
   constructor(@InjectRepository(Song) private repo: Repository<Song>) {}
 
+  getAll(user: User) {
+    return this.repo.find({ where: { user } });
+  }
+
   async uploadSong(songObject: UploadSongDto, user: User) {
     // Convert base64 to buffer
     const base64 = songObject.base64.split(",")[1];

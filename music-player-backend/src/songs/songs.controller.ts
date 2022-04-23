@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { CurrentUser } from "src/auth/middleware/current-user.middleware";
 import { User } from "src/entities/user.entity";
 import { AuthGuard } from "src/guards/auth.guard";
@@ -16,5 +16,11 @@ export class SongsController {
     @CurrentUser() user: User,
   ) {
     return this.songsService.uploadSong(songObject, user);
+  }
+
+  @Get("/")
+  @UseGuards(AuthGuard)
+  getAll(@CurrentUser() user: User) {
+    return this.songsService.getAll(user);
   }
 }
