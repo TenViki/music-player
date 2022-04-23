@@ -66,7 +66,7 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
         currentSong ? "active" : ""
       }`}
     >
-      <audio ref={audio} controls />
+      <audio ref={audio} />
       <div className="player-background">
         {currentSong?.cover && (
           <img

@@ -44,11 +44,19 @@ export class SongsController {
   ) {
     try {
       await fs.access("./files/" + filename + ".mp3");
+
+      const fileSize = (await fs.stat("./files/" + filename + ".mp3")).size;
+
       const file = createReadStream(
         join(process.cwd(), "files", filename + ".mp3"),
       );
 
-      res.header("Accept-Ranges", "bytes");
+      res.set({
+        "Content-Type": "audio/mpeg",
+        "Content-Length": fileSize,
+        "Content-Range": `bytes 0-${fileSize - 1}/${fileSize}`,
+        "Accept-Ranges": "bytes",
+      });
 
       return new StreamableFile(file);
     } catch (error) {
