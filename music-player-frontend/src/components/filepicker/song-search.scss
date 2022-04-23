@@ -25,6 +25,11 @@
 .song-search-entry{
   display: flex;
   align-items: center;
+  transition: .2s;
+
+  &:active {
+    transform: scale(.95);
+  }
 
   &:not(:last-child) {
     margin-bottom: .5rem;

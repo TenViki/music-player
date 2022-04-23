@@ -5,9 +5,10 @@ import { Repository } from "typeorm";
 import { AddSongDto } from "./upload-song.dto";
 import * as mm from "music-metadata/lib/core";
 import { User } from "src/entities/user.entity";
-import * as fs from "fs/promises";
+import * as fs from "fs";
 import { SpotifyService } from "src/spotify/spotify.service";
-import spottyDL from "spottydl";
+import spdl from "spdl-core";
+import * as toArray from "stream-to-array";
 
 @Injectable()
 export class SongsService {
@@ -21,14 +22,10 @@ export class SongsService {
   }
 
   async addSong(songObject: AddSongDto, user: User) {
-    const song = await spottyDL.getTrack(
-      `https://open.spotify.com/track/${songObject.id}`,
-    );
-    console.log(song);
+    await this.spotifyService.download(songObject.id);
 
-    // Convert base64 to buffer
-    // const buffer = Buffer.from(base64, "base64");
     // const metadata = await mm.parseBuffer(buffer);
+    // console.log(metadata);
 
     // const filename = Math.random().toString(36).substring(2, 15) + ".bin";
     // const filepath = `./files/${filename}`;

@@ -43,3 +43,19 @@ export const searchSongs = async (query: string): Promise<SearchResult[]> => {
   });
   return data.data;
 };
+
+export const addSong = async (songId: string): Promise<Song> => {
+  const data = await api.post<Song>(
+    `/songs`,
+    {
+      id: songId,
+    },
+    {
+      headers: {
+        Authorization: TokenManager.token,
+      },
+      timeout: 30000,
+    }
+  );
+  return data.data;
+};

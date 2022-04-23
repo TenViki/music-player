@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import { SearchResult, searchSongs } from "../../api/songs";
+import { addSong, SearchResult, searchSongs } from "../../api/songs";
 import { formatSize, getBase64 } from "../../utils/files";
 import Button from "../button/Button";
 import SwipeCard from "../swipecard/SwipeCard";
@@ -20,6 +20,16 @@ const SongSearch: React.FC<FilePickerProps> = ({ onClose, opened }) => {
 
   const [results, setResults] = React.useState<SearchResult[]>([]);
   const content = useRef(null);
+
+  const handleClick = async (id: string) => {
+    toast.warn("Adding song...");
+    try {
+      const a = await addSong(id);
+      toast.success("Song added!");
+    } catch (error) {
+      toast.error("Error adding song");
+    }
+  };
 
   useEffect(() => {
     // If search is changed, request new songs
@@ -57,7 +67,11 @@ const SongSearch: React.FC<FilePickerProps> = ({ onClose, opened }) => {
 
         <div className="song-search-results" ref={content}>
           {results.map((result) => (
-            <SongSearchEntry song={result} key={result.id} />
+            <SongSearchEntry
+              song={result}
+              key={result.id}
+              onSelect={handleClick}
+            />
           ))}
         </div>
       </div>

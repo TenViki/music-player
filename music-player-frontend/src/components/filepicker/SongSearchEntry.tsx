@@ -4,11 +4,15 @@ import { formatTime, getImageCover } from "../../utils/songs";
 
 interface SongSearchEntryProps {
   song: SearchResult;
+  onSelect: (id: string) => void;
 }
 
-const SongSearchEntry: React.FC<SongSearchEntryProps> = ({ song }) => {
+const SongSearchEntry: React.FC<SongSearchEntryProps> = ({
+  song,
+  onSelect,
+}) => {
   return (
-    <div className="song-search-entry">
+    <div className="song-search-entry" onClick={() => onSelect(song.id)}>
       <div className="song-search-cover">
         {getImageCover(song.album.images[0])}
       </div>
