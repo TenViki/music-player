@@ -1,8 +1,10 @@
 import axios from "axios";
 import { TokenManager } from "../utils/tokenmanager";
 
+export const BACKEND_URL = "http://10.0.0.16:5000";
+
 export const api = axios.create({
-  baseURL: "http://10.0.0.16:5000",
+  baseURL: BACKEND_URL,
   timeout: 5000,
 });
 

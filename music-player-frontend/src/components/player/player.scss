@@ -125,8 +125,8 @@
   align-items: center;
 
   .player-cover {
-    width: 15rem;
-    height: 15rem;
+    width: 10rem;
+    height: 10rem;
     overflow: hidden;
     border-radius: 2rem;
     margin-bottom: 2rem;
@@ -140,6 +140,7 @@
 
   .player-info {
     text-align: center;
+    margin-bottom: 0.5rem;
 
     .player-title {
       font-size: 2rem;
@@ -148,6 +149,50 @@
 
     .player-artist {
       opacity: 0.5;
+    }
+  }
+}
+
+.player-progress {
+  display: flex;
+  width: 100%;
+  padding: 0 1rem;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.7);
+
+  .player-progress-bar {
+    flex-grow: 1;
+    height: 0.2rem;
+    margin: 0 1rem;
+    border-radius: 0.25rem;
+    background-color: rgba(255, 255, 255, 0.3);
+
+    &-progress {
+      height: 100%;
+      background-color: #fff;
+      border-radius: 0.25rem;
+    }
+  }
+}
+
+.player-controls {
+  display: flex;
+
+  .player-controls-icon {
+    padding: 0.7rem;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+      transition: 0.2s;
+      opacity: 0.7;
+    }
+
+    &.main {
+      svg {
+        opacity: 1;
+        transform: scale(1.5);
+      }
     }
   }
 }

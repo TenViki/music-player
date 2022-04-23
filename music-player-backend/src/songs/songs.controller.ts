@@ -5,6 +5,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Res,
   StreamableFile,
   UseGuards,
 } from "@nestjs/common";
@@ -16,8 +17,9 @@ import { SongsService } from "./songs.service";
 import { SpotifySongDto } from "./spotify-song.dto";
 import { AddSongDto } from "./upload-song.dto";
 import * as fs from "fs/promises";
-import { createReadStream } from "fs";
+import { createReadStream, readSync } from "fs";
 import { join } from "path";
+import { Response } from "express";
 
 @Controller("songs")
 export class SongsController {
@@ -36,15 +38,21 @@ export class SongsController {
   }
 
   @Get("/:file.mp3")
-  async getSong(@Param("file") filename: string) {
-    console.log(filename);
+  async getSong(
+    @Param("file") filename: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     try {
       await fs.access("./files/" + filename + ".mp3");
       const file = createReadStream(
         join(process.cwd(), "files", filename + ".mp3"),
       );
+
+      res.header("Accept-Ranges", "bytes");
+
       return new StreamableFile(file);
     } catch (error) {
+      console.log(error);
       throw new NotFoundException("File not found");
     }
   }

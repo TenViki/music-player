@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Song } from "../../api/songs";
-import { getImageCover } from "../../utils/songs";
-import { FiChevronDown } from "react-icons/fi";
+import { formatTime, getImageCover } from "../../utils/songs";
+import {
+  FiChevronDown,
+  FiChevronLeft,
+  FiChevronRight,
+  FiRepeat,
+  FiShuffle,
+} from "react-icons/fi";
 import "./player.scss";
+import { BACKEND_URL } from "../../api/auth";
+import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
+import { IoPause, IoPlay } from "react-icons/io5";
 
 interface PlayerProps {
   currentSong?: Song;
@@ -11,6 +20,45 @@ interface PlayerProps {
 
 const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
   const [collapsed, setCollapsed] = React.useState(true);
+  const [currentTime, setCurrentTime] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
+
+  const audio = React.useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (!currentSong || !audio.current) return;
+    audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
+    audio.current.play();
+    console.log("Ayo wut");
+
+    const interval = setInterval(() => {
+      setCurrentTime(audio.current?.currentTime || 0);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [currentSong]);
+
+  useEffect(() => {
+    if (!audio.current) return;
+    // if (paused) {
+    //   audio.current.pause();
+    // } else {
+    //   audio.current.play();
+    // }
+
+    console.log(audio.current.currentTime);
+    audio.current.currentTime = 100;
+    console.log(audio.current.currentTime);
+  }, [paused]);
+
+  if (!currentSong)
+    return (
+      <div
+        className={`player ${collapsed ? "collapsed" : ""} ${
+          currentSong ? "active" : ""
+        }`}
+      ></div>
+    );
 
   return (
     <div
@@ -18,6 +66,7 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
         currentSong ? "active" : ""
       }`}
     >
+      <audio ref={audio} controls />
       <div className="player-background">
         {currentSong?.cover && (
           <img
@@ -48,6 +97,49 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
           <div className="player-info">
             <div className="player-title">{currentSong?.title}</div>
             <div className="player-artist">{currentSong?.artist}</div>
+          </div>
+
+          <div className="player-progress">
+            {formatTime(audio.current?.currentTime || 0)}
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.0001}
+              className="player-progress-bar"
+              value={(audio.current?.currentTime || 0) / currentSong.duration}
+              onChange={(e) => {
+                if (!audio.current) return;
+                audio.current.currentTime = 5;
+
+                console.log(
+                  e.target.value,
+                  currentSong.duration,
+                  +e.target.value * currentSong.duration
+                );
+              }}
+            />
+            {formatTime(currentSong?.duration)}
+          </div>
+          <div className="player-controls">
+            <div className="player-controls-icon">
+              <FiShuffle />
+            </div>
+            <div className="player-controls-icon">
+              <FiChevronLeft />
+            </div>
+            <div
+              className="player-controls-icon main"
+              onClick={() => setPaused(!paused)}
+            >
+              {paused ? <IoPlay /> : <IoPause />}
+            </div>
+            <div className="player-controls-icon">
+              <FiChevronRight />
+            </div>
+            <div className="player-controls-icon">
+              <FiRepeat />
+            </div>
           </div>
         </div>
       </div>
