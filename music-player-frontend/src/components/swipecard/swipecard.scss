@@ -1,0 +1,30 @@
+.swipecard-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transition: .5s;
+
+  &.active {
+    pointer-events: auto;
+    background-color: rgba(0, 0, 0, .5);
+
+    .swipecard-container {
+      transform: translateY(0 );
+    }
+  }
+}
+
+.swipecard-container{
+  position: absolute;
+  bottom: 0;
+  padding: 1rem;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+  background-color: #222;
+  border-radius: 1rem 1rem 0 0;
+  transition: .5s;
+  transform: translateY(100%);
+  width: 100%;
+}

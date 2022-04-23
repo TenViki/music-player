@@ -10,6 +10,7 @@
 *{
   margin: 0;
   font-family: "Nunito", sans-serif;
+  box-sizing: border-box;
 }
 
 html, body, #root, .app {
@@ -20,7 +21,8 @@ html, body, #root, .app {
 body {
   background-color: #121212;
   color: #fff;
-  touch-action: none
+  touch-action: none;
+  box-sizing: border-box;
 }
 
 .app {

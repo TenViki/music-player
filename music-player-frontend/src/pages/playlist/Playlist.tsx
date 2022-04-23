@@ -6,6 +6,7 @@ import Button from "../../components/button/Button";
 import { TokenManager } from "../../utils/tokenmanager";
 import "./playlist.scss";
 import noData from "../../assets/no_data.svg";
+import FilePicker from "../../components/filepicker/FilePicker";
 
 export interface Song {
   id: string;
@@ -66,6 +67,8 @@ const Playlist = () => {
           <div></div>
         )}
       </div>
+
+      <FilePicker file={file} setFile={setFile} onClose={() => {}} />
     </div>
   );
 };
