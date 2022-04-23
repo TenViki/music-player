@@ -7,14 +7,17 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-*{
+* {
   margin: 0;
   font-family: "Nunito", sans-serif;
   box-sizing: border-box;
   overscroll-behavior-y: contain;
 }
 
-html, body, #root, .app {
+html,
+body,
+#root,
+.app {
   -webkit-tap-highlight-color: transparent;
   height: 100%;
 }
@@ -32,23 +35,27 @@ body {
 }
 
 .page {
-  padding: max(env(safe-area-inset-top), 1rem) calc(env(safe-area-inset-right) + 1rem) max(env(safe-area-inset-bottom), 1rem) calc(env(safe-area-inset-left) + 1rem);
+  padding: max(env(safe-area-inset-top), 1rem)
+    calc(env(safe-area-inset-right) + 1rem)
+    max(env(safe-area-inset-bottom), 1rem)
+    calc(env(safe-area-inset-left) + 1rem);
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 
-  .page-header{
+  .page-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 1rem;
 
-    .button{
+    .button {
       flex-grow: 0;
       width: fit-content;
     }
   }
 
-  .page-content{
+  .page-content {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -59,7 +66,7 @@ h1 {
   font-weight: 100;
 }
 
-.Toastify__toast:first-child{
+.Toastify__toast:first-child {
   padding-top: max(8px, env(safe-area-inset-top));
   transform: translateX(1rem);
 }
