@@ -23,6 +23,9 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
   const [currentTime, setCurrentTime] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
   const [tapped, setTapped] = React.useState(false);
+  const [repeat, setRepeat] = React.useState(false);
+
+  const [queue, setQueue] = React.useState(playlist);
 
   const audio = React.useRef<HTMLAudioElement>(null);
 
@@ -30,6 +33,7 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
     if (!currentSong || !audio.current) return;
     audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
     audio.current.play();
+    setPaused(false);
   }, [currentSong]);
 
   useEffect(() => {
@@ -39,6 +43,20 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
 
     return () => clearInterval(interval);
   }, [currentSong, tapped, audio]);
+
+  const handleEnd = () => {
+    if (!audio.current) return;
+    if (repeat) {
+      audio.current.currentTime = 0;
+      audio.current.play();
+    }
+  };
+
+  useEffect(() => {
+    audio.current?.addEventListener("ended", handleEnd);
+
+    return () => audio.current?.removeEventListener("ended", handleEnd);
+  }, [audio, repeat]);
 
   useEffect(() => {
     if (!audio.current) return;
@@ -145,7 +163,10 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
             <div className="player-controls-icon">
               <FiChevronRight />
             </div>
-            <div className="player-controls-icon">
+            <div
+              className={`player-controls-icon ${repeat ? "active" : ""}`}
+              onClick={() => setRepeat(!repeat)}
+            >
               <FiRepeat />
             </div>
           </div>
