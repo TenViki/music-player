@@ -34,7 +34,6 @@ export class SongsService {
     const metadata = await mm.parseBuffer(buffer);
 
     const trackData = await this.spotifyService.getTrack(songObject.id);
-    console.log(trackData);
 
     // Create song object
     const song = this.repo.create({

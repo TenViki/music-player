@@ -8,8 +8,9 @@ import "./playlist.scss";
 import noData from "../../assets/no_data.svg";
 import SongSearch from "../../components/filepicker/SongSearch";
 import { useQuery } from "react-query";
-import { getPlaylist } from "../../api/songs";
+import { getPlaylist, Song } from "../../api/songs";
 import PlaylistEntry from "../../components/playlist/PlaylistEntry";
+import Player from "../../components/player/Player";
 
 const Playlist = () => {
   const { setUser, user } = React.useContext(UserContext);
@@ -20,6 +21,9 @@ const Playlist = () => {
   const navigate = useNavigate();
 
   const [songSelectionOpened, setSongSelectionOpened] = React.useState(false);
+  const [currentSong, setCurrentSong] = React.useState<Song | undefined>(
+    undefined
+  );
 
   return (
     <div className="page">
@@ -50,7 +54,11 @@ const Playlist = () => {
         ) : (
           <>
             {playlist.map((song) => (
-              <PlaylistEntry song={song} />
+              <PlaylistEntry
+                song={song}
+                key={song.id}
+                onSelect={setCurrentSong}
+              />
             ))}
             <Button
               text="Add a song"
@@ -64,6 +72,8 @@ const Playlist = () => {
         opened={songSelectionOpened}
         onClose={() => setSongSelectionOpened(false)}
       />
+
+      <Player playlist={playlist || []} currentSong={currentSong} />
     </div>
   );
 };
