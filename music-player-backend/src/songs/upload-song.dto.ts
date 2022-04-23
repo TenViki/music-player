@@ -1,4 +1,4 @@
-import { IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class UploadSongDto {
   @IsString()
@@ -9,4 +9,8 @@ export class UploadSongDto {
 
   @IsString()
   base64: string;
+
+  @IsString()
+  @IsOptional()
+  cover?: string;
 }
