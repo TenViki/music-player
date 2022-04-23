@@ -27,4 +27,9 @@
   transition: .5s;
   transform: translateY(100%);
   width: 100%;
+
+  &.dragging {
+    transition: 0s;
+    transform: translateY(calc(var(--transformBy) * 1px)) !important;
+  }
 }
