@@ -14,6 +14,15 @@ export interface Song {
   file: string;
 }
 
+export const getPlaylist = async (): Promise<Song[]> => {
+  const data = await api.get<Song[]>("/songs", {
+    headers: {
+      Authorization: TokenManager.token,
+    },
+  });
+  return data.data;
+};
+
 export const createSong = (
   title: string,
   artist: string,

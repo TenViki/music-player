@@ -7,18 +7,16 @@ import { TokenManager } from "../../utils/tokenmanager";
 import "./playlist.scss";
 import noData from "../../assets/no_data.svg";
 import FilePicker from "../../components/filepicker/FilePicker";
-
-export interface Song {
-  id: string;
-  coverUrl: string;
-  artist: string;
-  title: string;
-  duration: number;
-}
+import { useQuery } from "react-query";
+import { getPlaylist } from "../../api/songs";
+import PlaylistEntry from "../../components/playlist/PlaylistEntry";
 
 const Playlist = () => {
-  const [playlist, setPlaylist] = React.useState<string[]>([]);
-  const { user, setUser } = React.useContext(UserContext);
+  const { setUser, user } = React.useContext(UserContext);
+  const { data: playlist } = useQuery(["playlist", user?.id], getPlaylist, {
+    enabled: !!user,
+    initialData: [],
+  });
   const navigate = useNavigate();
 
   const [file, setFile] = React.useState<File | null>(null);
@@ -57,14 +55,19 @@ const Playlist = () => {
       </div>
 
       <div className="page-content">
-        {playlist.length === 0 ? (
+        {!playlist || playlist.length === 0 ? (
           <div className="empty-playlist">
             <img src={noData} alt="" />
             <h2>Your playlist is empty</h2>
             <Button text="Upload a song" onClick={handleFileSelect} />
           </div>
         ) : (
-          <div></div>
+          <>
+            {playlist.map((song) => (
+              <PlaylistEntry song={song} />
+            ))}
+            <Button text="Upload a song" onClick={handleFileSelect} />
+          </>
         )}
       </div>
 
