@@ -16,7 +16,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
 }) => {
   const handleOverlayClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
     const target = e.target as HTMLDivElement;
-    if (target.classList.contains("swipe-card-overlay")) {
+    if (target.classList.contains("swipecard-overlay")) {
       onClose();
     }
   };

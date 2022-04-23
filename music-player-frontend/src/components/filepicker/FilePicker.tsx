@@ -13,7 +13,7 @@ const FilePicker: React.FC<FilePickerProps> = ({ file, onClose, setFile }) => {
   return (
     <SwipeCard
       opened={file ? true : false}
-      onClose={() => {}}
+      onClose={() => setFile(null)}
       closePercentage={50}
     >
       <div className="file-picker">
