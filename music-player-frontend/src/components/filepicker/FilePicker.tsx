@@ -12,11 +12,15 @@ interface FilePickerProps {
 }
 
 const FilePicker: React.FC<FilePickerProps> = ({ file, onClose, setFile }) => {
+  const [artist, setArtist] = React.useState("");
+  const [title, setTitle] = React.useState("");
+  const [cover, setCover] = React.useState("");
+
   return (
     <SwipeCard
       opened={file ? true : false}
       onClose={() => setFile(null)}
-      closePercentage={50}
+      closePercentage={20}
     >
       <div className="file-picker">
         <h2>File infomration</h2>
@@ -29,17 +33,31 @@ const FilePicker: React.FC<FilePickerProps> = ({ file, onClose, setFile }) => {
           </div>
 
           <Textfield
-            value=""
-            placeholder="Enter artist"
-            label="Artist"
-            onChange={() => {}}
+            value={title}
+            placeholder="Enter song title"
+            label="Title"
+            onChange={setTitle}
           />
 
           <Textfield
-            value=""
+            value={title}
+            placeholder="Enter song title"
+            label="Title"
+            onChange={setTitle}
+          />
+
+          <Textfield
+            value={artist}
+            placeholder="Enter artist"
+            label="Artist"
+            onChange={setArtist}
+          />
+
+          <Textfield
+            value={cover}
             placeholder="Enter cover URL"
             label="Cover URL"
-            onChange={() => {}}
+            onChange={setCover}
           />
 
           <Button text="Upload" onClick={() => setFile(null)} />

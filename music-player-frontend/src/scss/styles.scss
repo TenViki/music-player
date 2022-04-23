@@ -11,6 +11,7 @@
   margin: 0;
   font-family: "Nunito", sans-serif;
   box-sizing: border-box;
+  overscroll-behavior-y: contain;
 }
 
 html, body, #root, .app {

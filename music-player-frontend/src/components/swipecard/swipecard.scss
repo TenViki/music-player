@@ -6,6 +6,7 @@
   height: 100%;
   pointer-events: none;
   transition: .5s;
+  touch-action: none;
 
   &.active {
     pointer-events: auto;
@@ -15,6 +16,8 @@
       transform: translateY(0 );
     }
   }
+
+  overscroll-behavior-y: contain;
 }
 
 .swipecard-container{
@@ -27,6 +30,11 @@
   transition: .5s;
   transform: translateY(100%);
   width: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  overscroll-behavior-y: contain;
 
   .swipecard-line{
     background-color: #333;
@@ -34,6 +42,7 @@
     margin: 0 auto .5rem auto;
     width: min(50%, 20rem);
     border-radius: .15rem;
+    flex-shrink: 0;
   }
 
   &.dragging {

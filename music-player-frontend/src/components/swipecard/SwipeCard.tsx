@@ -34,6 +34,8 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
   };
 
   const onTouchStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+    console.log(cardRef.current?.scrollTop);
     if (cardRef.current?.scrollTop) return;
     setOriginY(e.touches[0].clientY);
     setDragging(true);
