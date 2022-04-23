@@ -1,7 +1,7 @@
 import axios from "axios";
 import { TokenManager } from "../utils/tokenmanager";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: "http://10.0.0.16:5000",
   timeout: 5000,
 });

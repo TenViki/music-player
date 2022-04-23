@@ -20,6 +20,25 @@ const Playlist = () => {
   const { user, setUser } = React.useContext(UserContext);
   const navigate = useNavigate();
 
+  const [file, setFile] = React.useState<File | null>(null);
+
+  const handleFileSelect = async () => {
+    // Open file select dialog window
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "audio/*";
+    input.click();
+
+    input.onchange = async () => {
+      if (!input.files) return;
+      const file = input.files[0];
+      if (!file) return;
+      setFile(file);
+
+      input.remove();
+    };
+  };
+
   return (
     <div className="page">
       <div className="page-header">
@@ -41,7 +60,7 @@ const Playlist = () => {
           <div className="empty-playlist">
             <img src={noData} alt="" />
             <h2>Your playlist is empty</h2>
-            <Button text="Upload a song" onClick={() => {}} />
+            <Button text="Upload a song" onClick={handleFileSelect} />
           </div>
         ) : (
           <div></div>
