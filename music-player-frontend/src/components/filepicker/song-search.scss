@@ -5,13 +5,21 @@
 
   h2 {
     font-weight: 300;
+    margin: 0 1rem;
     margin-bottom: 1rem;
+  }
+  .textfield{
+    margin-bottom: 0;
+  margin: 0 1rem;
+
   }
 }
 
 .song-search-results{
   overflow: auto;
-  mask-image: linear-gradient(rgba(0, 0, 0, 1.0), transparent);
+  padding: 1.5rem 1rem 1rem 1rem;
+
+  -webkit-mask-image: linear-gradient(to bottom, transparent, transparent .2rem, black 2rem);
 }
 
 .song-search-entry{
