@@ -12,6 +12,7 @@ import "./player.scss";
 import { BACKEND_URL } from "../../api/auth";
 import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
 import { IoPause, IoPlay } from "react-icons/io5";
+import PlayerContent from "./PlayerContent";
 
 interface PlayerProps {
   currentSong?: Song;
@@ -29,11 +30,18 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
 
   const audio = React.useRef<HTMLAudioElement>(null);
 
+  const processPlaylist = (playlist: Song[]) => {
+    const before = playlist.slice(0, playlist.indexOf(currentSong!));
+    const after = playlist.slice(playlist.indexOf(currentSong!) + 1);
+    return [...after, ...before];
+  };
+
   useEffect(() => {
     if (!currentSong || !audio.current) return;
     audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
     audio.current.play();
     setPaused(false);
+    setQueue(processPlaylist(playlist));
   }, [currentSong]);
 
   useEffect(() => {
@@ -113,65 +121,21 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
         </div>
       </div>
 
-      <div className="player-content">
-        <div className="player-song">
-          <div className="player-cover">
-            {getImageCover(currentSong?.cover || "")}
-          </div>
-          <div className="player-info">
-            <div className="player-title">{currentSong?.title}</div>
-            <div className="player-artist">{currentSong?.artist}</div>
-          </div>
-
-          <div className="player-progress">
-            {formatTime(audio.current?.currentTime || 0)}
-            <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.0001}
-              className="player-progress-bar"
-              style={{
-                backgroundSize: `${
-                  (currentTime / currentSong.duration) * 100
-                }% 100%`,
-              }}
-              value={(currentTime || 0) / currentSong.duration}
-              onChange={(e) => {
-                setCurrentTime(+e.target.value * currentSong.duration);
-              }}
-              onTouchEnd={handleProgressDown}
-              onMouseUp={handleProgressDown}
-              onTouchStart={() => setTapped(true)}
-              onMouseDown={() => setTapped(true)}
-            />
-            {formatTime(currentSong?.duration)}
-          </div>
-          <div className="player-controls">
-            <div className="player-controls-icon">
-              <FiShuffle />
-            </div>
-            <div className="player-controls-icon">
-              <FiChevronLeft />
-            </div>
-            <div
-              className="player-controls-icon main"
-              onClick={() => setPaused(!paused)}
-            >
-              {paused ? <IoPlay /> : <IoPause />}
-            </div>
-            <div className="player-controls-icon">
-              <FiChevronRight />
-            </div>
-            <div
-              className={`player-controls-icon ${repeat ? "active" : ""}`}
-              onClick={() => setRepeat(!repeat)}
-            >
-              <FiRepeat />
-            </div>
-          </div>
-        </div>
-      </div>
+      {audio.current && (
+        <PlayerContent
+          audio={audio.current!}
+          currentSong={currentSong}
+          currentTime={currentTime}
+          handleProgressDown={handleProgressDown}
+          paused={paused}
+          repeat={repeat}
+          setRepeat={setRepeat}
+          setTapped={setTapped}
+          setPaused={setPaused}
+          setCurrentTime={setCurrentTime}
+          tapped={tapped}
+        />
+      )}
     </div>
   );
 };
