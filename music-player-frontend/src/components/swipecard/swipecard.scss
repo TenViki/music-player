@@ -43,6 +43,7 @@
     width: min(50%, 20rem);
     border-radius: .15rem;
     flex-shrink: 0;
+    transition: .2s;
   }
 
   &.dragging {

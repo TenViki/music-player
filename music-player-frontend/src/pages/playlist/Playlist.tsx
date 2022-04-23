@@ -68,7 +68,7 @@ const Playlist = () => {
         )}
       </div>
 
-      <FilePicker file={file} setFile={setFile} onClose={() => {}} />
+      <FilePicker file={file} setFile={setFile} onClose={() => setFile(null)} />
     </div>
   );
 };

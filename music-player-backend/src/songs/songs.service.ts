@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { UploadSongDto } from "./upload-song.dto";
 import * as mm from "music-metadata/lib/core";
 import { User } from "src/entities/user.entity";
-import fs from "fs/promises";
+import * as fs from "fs/promises";
 
 @Injectable()
 export class SongsService {
@@ -13,7 +13,8 @@ export class SongsService {
 
   async uploadSong(songObject: UploadSongDto, user: User) {
     // Convert base64 to buffer
-    const buffer = Buffer.from(songObject.base64, "base64");
+    const base64 = songObject.base64.split(",")[1];
+    const buffer = Buffer.from(base64, "base64");
     const metadata = await mm.parseBuffer(buffer);
 
     const filename = Math.random().toString(36).substring(2, 15) + ".bin";
@@ -26,7 +27,7 @@ export class SongsService {
     const song = this.repo.create({
       title: songObject.title,
       artist: songObject.artist,
-      duration: metadata.format.duration,
+      duration: Math.floor(metadata.format.duration),
       cover: songObject.cover,
       bitrate: metadata.format.bitrate,
       sampleRate: metadata.format.sampleRate,

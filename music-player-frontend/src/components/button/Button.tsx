@@ -1,11 +1,12 @@
 import "./Button.scss";
 
 interface ButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   text: string;
   color?: string;
   type?: "button" | "submit" | "reset";
   loading?: boolean;
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -14,11 +15,12 @@ const Button: React.FC<ButtonProps> = ({
   color,
   type,
   loading,
+  disabled,
 }) => {
   return (
     <button
       className="button"
-      disabled={loading}
+      disabled={loading || disabled}
       style={{ backgroundColor: color }}
       onClick={onClick}
       type={type || "button"}
