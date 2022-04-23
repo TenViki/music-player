@@ -22,6 +22,7 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
   const [collapsed, setCollapsed] = React.useState(true);
   const [currentTime, setCurrentTime] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
+  const [tapped, setTapped] = React.useState(false);
 
   const audio = React.useRef<HTMLAudioElement>(null);
 
@@ -29,13 +30,15 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
     if (!currentSong || !audio.current) return;
     audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
     audio.current.play();
+  }, [currentSong]);
 
+  useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(audio.current?.currentTime || 0);
+      !tapped && setCurrentTime(audio.current?.currentTime || 0);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [currentSong]);
+  }, [currentSong, tapped, audio]);
 
   useEffect(() => {
     if (!audio.current) return;
@@ -45,6 +48,14 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
       audio.current.play();
     }
   }, [paused]);
+
+  const handleProgressDown = () => {
+    if (!audio.current) return;
+    setTapped(false);
+    audio.current.currentTime = currentTime;
+    audio.current.play();
+    setPaused(false);
+  };
 
   if (!currentSong)
     return (
@@ -102,14 +113,19 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
               max={1}
               step={0.0001}
               className="player-progress-bar"
+              style={{
+                backgroundSize: `${
+                  (currentTime / currentSong.duration) * 100
+                }% 100%`,
+              }}
               value={(currentTime || 0) / currentSong.duration}
               onChange={(e) => {
                 setCurrentTime(+e.target.value * currentSong.duration);
               }}
-              onMouseUp={() => {
-                if (!audio.current) return;
-                audio.current.currentTime = currentTime;
-              }}
+              onTouchEnd={handleProgressDown}
+              onMouseUp={handleProgressDown}
+              onTouchStart={() => setTapped(true)}
+              onMouseDown={() => setTapped(true)}
             />
             {formatTime(currentSong?.duration)}
           </div>
