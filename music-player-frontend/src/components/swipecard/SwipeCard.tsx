@@ -7,6 +7,8 @@ interface SwipeCardProps {
   closePercentage: number;
   children: React.ReactNode;
   fullheight?: boolean;
+  hiddenOverflow?: boolean;
+  scrollContentRef?: React.RefObject<HTMLDivElement>;
 }
 
 const SwipeCard: React.FC<SwipeCardProps> = ({
@@ -15,6 +17,8 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
   closePercentage,
   children,
   fullheight,
+  hiddenOverflow,
+  scrollContentRef,
 }) => {
   const [originY, setOriginY] = React.useState(0);
   const [currentY, setCurrentY] = React.useState(0);
@@ -37,8 +41,8 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
 
   const onTouchStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
-    console.log(cardRef.current?.scrollTop);
-    if (cardRef.current?.scrollTop) return;
+    if (cardRef.current?.scrollTop || scrollContentRef?.current?.scrollTop)
+      return;
     setOriginY(e.touches[0].clientY);
     setDragging(true);
   };
@@ -83,11 +87,17 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
         style={
           {
             "--transformBy": Math.max(0, currentY - originY),
+            overflow: hiddenOverflow ? "hidden" : "",
           } as React.CSSProperties
         }
       >
         <div className="swipecard-line"></div>
-        <div className="swipecard-content">{children}</div>
+        <div
+          className="swipecard-content"
+          style={{ overflow: hiddenOverflow ? "hidden" : "" }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { SearchResult, searchSongs } from "../../api/songs";
 import { formatSize, getBase64 } from "../../utils/files";
@@ -19,6 +19,7 @@ const SongSearch: React.FC<FilePickerProps> = ({ onClose, opened }) => {
   const [search, setSearch] = React.useState("");
 
   const [results, setResults] = React.useState<SearchResult[]>([]);
+  const content = useRef(null);
 
   useEffect(() => {
     // If search is changed, request new songs
@@ -42,6 +43,8 @@ const SongSearch: React.FC<FilePickerProps> = ({ onClose, opened }) => {
       onClose={onClose}
       closePercentage={20}
       fullheight
+      hiddenOverflow
+      scrollContentRef={content}
     >
       <div className="song-search">
         <h2>Add song</h2>
@@ -52,9 +55,9 @@ const SongSearch: React.FC<FilePickerProps> = ({ onClose, opened }) => {
           onChange={setSearch}
         />
 
-        <div className="song-search-results">
+        <div className="song-search-results" ref={content}>
           {results.map((result) => (
-            <SongSearchEntry song={result} />
+            <SongSearchEntry song={result} key={result.id} />
           ))}
         </div>
       </div>

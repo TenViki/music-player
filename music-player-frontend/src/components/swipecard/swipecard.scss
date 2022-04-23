@@ -23,8 +23,7 @@
 .swipecard-container{
   position: absolute;
   bottom: 0;
-  padding: 1rem;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+  padding: 1rem 1rem 0 1rem;
   background-color: #222;
   border-radius: 1rem 1rem 0 0;
   transition: .5s;
@@ -53,5 +52,10 @@
   &.dragging {
     transition: 0s;
     transform: translateY(calc(var(--transformBy) * 1px)) !important;
+  }
+
+  .swipecard-content{
+    display: flex;
+    flex-direction: column;
   }
 }
