@@ -15,6 +15,24 @@ export class Song {
   @Column()
   duration: number;
 
+  @Column()
+  cover: string;
+
+  @Column()
+  bitrate: number;
+
+  @Column()
+  sampleRate: number;
+
+  @Column()
+  size: number;
+
+  @Column()
+  lossless: boolean;
+
+  @Column()
+  file: string;
+
   @ManyToOne(() => User, (user) => user.songs)
   user: User;
 }
