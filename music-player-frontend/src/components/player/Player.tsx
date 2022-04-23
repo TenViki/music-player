@@ -113,7 +113,26 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
         <div className="player-header-cover">
           {getImageCover(currentSong?.cover || "")}
         </div>
-        <div className="player-header-info">{currentSong?.title}</div>
+        <div className="play-header-content">
+          <div className="player-header-upper">
+            <div className="player-header-info">{currentSong?.title}</div>
+            <div
+              className="player-header-controls"
+              onClick={() => setPaused(!paused)}
+            >
+              {paused ? <IoPlay /> : <IoPause />}
+            </div>
+          </div>
+          <div className="player-header-progress">
+            <div
+              className="player-header-progress-bar"
+              style={{
+                width: `${(currentTime / currentSong.duration) * 100}%`,
+              }}
+            />
+          </div>
+        </div>
+
         <div
           className="playlist-header-toggle"
           onClick={() => setCollapsed(!collapsed)}

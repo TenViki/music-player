@@ -32,6 +32,10 @@
         opacity: 1;
       }
 
+      .player-header-controls {
+        opacity: 1;
+      }
+
       .playlist-header-toggle svg {
         transform: rotate(180deg);
       }
@@ -75,6 +79,42 @@
   padding: 0.5rem;
   margin-top: env(safe-area-inset-top);
   transition: 0.55s;
+
+  .play-header-content {
+    flex-grow: 1;
+  }
+
+  .player-header-upper {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+  }
+
+  .player-header-progress {
+    height: 0.2rem;
+    border-radius: 0.1rem;
+    margin-top: 1rem;
+    background-color: rgba(255, 255, 255, 0.35);
+
+    .player-header-progress-bar {
+      height: 100%;
+      background-color: #fff;
+      border-radius: 0.1rem;
+    }
+  }
+
+  .player-header-controls {
+    transition: 0.55s;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
+  }
 
   .player-header-info {
     flex-grow: 1;
