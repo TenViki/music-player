@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../button/Button";
 import SwipeCard from "../swipecard/SwipeCard";
 import Textfield from "../textfield/Textfield";
+import "./filepicker.scss";
 
 interface FilePickerProps {
   file: File | null;
