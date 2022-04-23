@@ -28,7 +28,7 @@ export class SongsController {
 
   @Get("/search/:q")
   @Serialize(SpotifySongDto)
-  async idk(@Param("q") q: string) {
+  async search(@Param("q") q: string) {
     return await this.songsService.search(q);
   }
 }

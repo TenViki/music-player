@@ -13,8 +13,6 @@ export class SpotifyService implements OnApplicationBootstrap {
 
   @Cron(CronExpression.EVERY_HOUR)
   async refreshToken() {
-    console.log(process.env.SPOTIFY_CLIENT_ID);
-
     const token = Buffer.from(
       `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
     ).toString("base64");
@@ -31,7 +29,6 @@ export class SpotifyService implements OnApplicationBootstrap {
         },
       );
       this.accessToken = response.data.access_token;
-      console.log(this.accessToken, response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(
