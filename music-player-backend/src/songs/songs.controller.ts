@@ -23,4 +23,9 @@ export class SongsController {
   getAll(@CurrentUser() user: User) {
     return this.songsService.getAll(user);
   }
+
+  @Get("/test")
+  async idk() {
+    return await this.songsService.idk();
+  }
 }
