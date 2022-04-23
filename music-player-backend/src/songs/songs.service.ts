@@ -6,10 +6,14 @@ import { UploadSongDto } from "./upload-song.dto";
 import * as mm from "music-metadata/lib/core";
 import { User } from "src/entities/user.entity";
 import * as fs from "fs/promises";
+import { SpotifyService } from "src/spotify/spotify.service";
 
 @Injectable()
 export class SongsService {
-  constructor(@InjectRepository(Song) private repo: Repository<Song>) {}
+  constructor(
+    @InjectRepository(Song) private repo: Repository<Song>,
+    private spotifyService: SpotifyService,
+  ) {}
 
   getAll(user: User) {
     return this.repo.find({ where: { user } });
@@ -45,5 +49,8 @@ export class SongsService {
     return this.repo.save(song);
   }
 
-  async idk() {}
+  async search(query: string) {
+    const a = await this.spotifyService.search(query);
+    return a.tracks.items;
+  }
 }

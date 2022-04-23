@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { CurrentUser } from "src/auth/middleware/current-user.middleware";
 import { User } from "src/entities/user.entity";
 import { AuthGuard } from "src/guards/auth.guard";
+import { Serialize } from "src/interceptors/serialize.interceptor";
 import { SongsService } from "./songs.service";
+import { SpotifySongDto } from "./spotify-song.dto";
 import { UploadSongDto } from "./upload-song.dto";
 
 @Controller("songs")
@@ -24,8 +26,9 @@ export class SongsController {
     return this.songsService.getAll(user);
   }
 
-  @Get("/test")
-  async idk() {
-    return await this.songsService.idk();
+  @Get("/search/:q")
+  @Serialize(SpotifySongDto)
+  async idk(@Param("q") q: string) {
+    return await this.songsService.search(q);
   }
 }

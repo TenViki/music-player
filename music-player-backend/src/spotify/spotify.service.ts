@@ -1,6 +1,7 @@
 import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import axios from "axios";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { SpotifySearch } from "src/types/spotify-search.type";
 
 @Injectable()
 export class SpotifyService implements OnApplicationBootstrap {
@@ -39,5 +40,15 @@ export class SpotifyService implements OnApplicationBootstrap {
         );
       }
     }
+  }
+
+  async search(query: string) {
+    const url = `https://api.spotify.com/v1/search?q=${query}&type=track`;
+    const response = await axios.get<SpotifySearch>(url, {
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+    });
+    return response.data;
   }
 }
