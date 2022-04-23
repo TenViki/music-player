@@ -6,6 +6,7 @@ interface SwipeCardProps {
   onClose: () => void;
   closePercentage: number;
   children: React.ReactNode;
+  fullheight?: boolean;
 }
 
 const SwipeCard: React.FC<SwipeCardProps> = ({
@@ -13,6 +14,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
   onClose,
   closePercentage,
   children,
+  fullheight,
 }) => {
   const [originY, setOriginY] = React.useState(0);
   const [currentY, setCurrentY] = React.useState(0);
@@ -74,7 +76,9 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
       onTouchEnd={onTouchEnd}
     >
       <div
-        className={`swipecard-container ${dragging ? "dragging" : ""}`}
+        className={`swipecard-container ${dragging ? "dragging" : ""} ${
+          fullheight ? "fullheight" : ""
+        }`}
         ref={cardRef}
         style={
           {

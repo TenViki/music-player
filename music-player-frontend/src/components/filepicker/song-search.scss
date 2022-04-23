@@ -1,0 +1,40 @@
+.song-search{
+  h2 {
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+}
+
+.song-search-entry{
+  display: flex;
+  align-items: center;
+
+  &:not(:last-child) {
+    margin-bottom: .5rem;
+  }
+
+  .song-search-cover {
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+    overflow: hidden;
+    margin-right: 1rem;
+    border-radius: .5rem;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .song-search-info{
+    flex-grow: 1;
+  }
+
+  .song-search-artist, 
+  .song-search-duration{
+    font-size: .9rem;
+    color: #999;
+  }
+}

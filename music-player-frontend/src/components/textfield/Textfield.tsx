@@ -6,7 +6,7 @@ interface TextfieldProps {
   onChange: (value: string) => void;
   type?: "text" | "password" | "email" | "number" | "tel" | "search";
   placeholder: string;
-  label: string;
+  label?: string;
   error?: string;
 }
 
@@ -21,7 +21,7 @@ const Textfield: React.FC<TextfieldProps> = ({
   return (
     <div className={`textfield`}>
       {error && <div className="textfield-error">{error}</div>}
-      <div className="textfield-label">{label}</div>
+      {label && <div className="textfield-label">{label}</div>}
       <input
         className={`textfield-input ${error ? "error" : ""}`}
         type={type}

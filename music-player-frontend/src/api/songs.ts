@@ -14,6 +14,18 @@ export interface Song {
   file: string;
 }
 
+export interface SearchResult {
+  id: string;
+  name: string;
+  duration_ms: number;
+
+  album: {
+    images: string[];
+  };
+
+  artists: string[];
+}
+
 export const getPlaylist = async (): Promise<Song[]> => {
   const data = await api.get<Song[]>("/songs", {
     headers: {
@@ -23,31 +35,11 @@ export const getPlaylist = async (): Promise<Song[]> => {
   return data.data;
 };
 
-export const createSong = (
-  title: string,
-  artist: string,
-  cover: string,
-  base64: string,
-  onProgress: (progress: number) => void
-) => {
-  return api.post<Song>(
-    "/songs",
-    {
-      title,
-      artist,
-      cover,
-      base64,
+export const searchSongs = async (query: string): Promise<SearchResult[]> => {
+  const data = await api.get<SearchResult[]>(`/songs/search/${query}`, {
+    headers: {
+      Authorization: TokenManager.token,
     },
-    {
-      onUploadProgress: (progressEvent) => {
-        const progress = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        onProgress(progress);
-      },
-      headers: {
-        Authorization: TokenManager.token,
-      },
-    }
-  );
+  });
+  return data.data;
 };
