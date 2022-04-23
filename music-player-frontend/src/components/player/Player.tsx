@@ -13,6 +13,7 @@ import { BACKEND_URL } from "../../api/auth";
 import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
 import { IoPause, IoPlay } from "react-icons/io5";
 import PlayerContent from "./PlayerContent";
+import Queue from "./Queue";
 
 interface PlayerProps {
   currentSong?: Song;
@@ -136,6 +137,8 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
           tapped={tapped}
         />
       )}
+
+      <Queue queue={queue} />
     </div>
   );
 };
