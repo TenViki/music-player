@@ -295,3 +295,14 @@ input[type="range"]::-webkit-slider-runnable-track {
   box-shadow: none;
   border: none;
 }
+
+.player-queue {
+  padding: 0 1rem;
+
+  .playlist-entry-artist,
+  .playlist-entry-time {
+    font-size: 0.9rem;
+    color: #fff;
+    opacity: 0.8;
+  }
+}
