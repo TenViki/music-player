@@ -48,7 +48,7 @@ const Player: React.FC<PlayerProps> = ({
   }, [playlist, shuffle]);
 
   useEffect(() => {
-    if (currentSong === prevValues?.currentSong) return console.log("Returned");
+    if (currentSong === prevValues?.currentSong) return;
     if (!currentSong || !audio.current) return;
     audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
     audio.current.play();
