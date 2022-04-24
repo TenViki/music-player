@@ -24,11 +24,19 @@ interface DeviceType {
   type: string;
 }
 
+interface Status {
+  device: string;
+  song: string;
+  shuffle: boolean;
+  repeat: boolean;
+}
+
 @WebSocketGateway({ cors: "*" })
 export class SongsGateway implements OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   private clients: Map<string, User> = new Map();
   private userDevices: Map<string, DeviceType[]> = new Map();
+  private userStatuses: Map<string, Status> = new Map();
 
   constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
 
@@ -119,5 +127,32 @@ export class SongsGateway implements OnGatewayDisconnect {
       event: "device-update",
       data: devices,
     };
+  }
+
+  @SubscribeMessage("get-status")
+  async handleGetStatus(@ConnectedSocket() client: Socket) {
+    const user = this.clients.get(client.id);
+    if (!user) return wsError("User not authenticated");
+
+    const status = this.userStatuses.get(user.id);
+    if (!status) return wsError("No status registered");
+
+    return {
+      event: "status-update",
+      data: status,
+    };
+  }
+
+  @SubscribeMessage("set-status")
+  async handleSetStatus(
+    @ConnectedSocket() client: Socket,
+    @MessageBody("status") status: Status,
+  ) {
+    const user = this.clients.get(client.id);
+    if (!user) return wsError("User not authenticated");
+
+    this.userStatuses.set(user.id, status);
+
+    this.send("status-update", status, user.id);
   }
 }
