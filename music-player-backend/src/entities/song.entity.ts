@@ -39,6 +39,9 @@ export class Song {
   @Column()
   format: string;
 
+  @Column({ nullable: true })
+  lyrics: string;
+
   @ManyToOne(() => User, (user) => user.songs)
   user: User;
 }

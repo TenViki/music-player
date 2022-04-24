@@ -36,6 +36,11 @@ export class SongsService {
 
     const trackData = await this.spotifyService.getTrack(songObject.id);
 
+    const songLyrics = await this.spotifyService.getSongLyrics(
+      trackData.artists.map((a) => a.name).join(", "),
+      trackData.name,
+    );
+
     // Create song object
     const song = this.repo.create({
       title: trackData.name,
@@ -50,6 +55,7 @@ export class SongsService {
       user,
       channels: metadata.format.numberOfChannels,
       format: metadata.format.container,
+      lyrics: songLyrics,
     });
 
     // Save song to database

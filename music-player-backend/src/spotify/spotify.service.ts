@@ -75,15 +75,24 @@ export class SpotifyService implements OnApplicationBootstrap {
     );
   }
 
-  async getSongLyrics(artist: string, title: string) {
-    const url = `https://apic-desktop.musixmatch.com/ws/1.1/macro.subtitles.get?format=json&
-      user_language=en&namespace=lyrics_synched&f_subtitle_length_max_deviation=1&subtitle_format=mxm&app_id=web-desktop-app-v1.0
-      &usertoken=190511307254ae92ff84462c794732b84754b64a2f051121eff330
-      &q_artist=${artist}&q_track=${title}`;
-    const response = await axios.get<LyricsSearch>(url);
+  async getSongLyrics(artist: string, title: string): Promise<string | null> {
+    const url = `https://apic-desktop.musixmatch.com/ws/1.1/macro.subtitles.get?format=json&user_language=en&namespace=lyrics_synched&f_subtitle_length_max_deviation=1&subtitle_format=mxm&app_id=web-desktop-app-v1.0&usertoken=190511307254ae92ff84462c794732b84754b64a2f051121eff330&q_artist=${artist}&q_track=${title}`;
+    const response = await axios.get<LyricsSearch>(url, {
+      headers: {
+        Cookie: `AWSELB=55578B011601B1EF8BC274C33F9043CA947F99DCFF0A80541772015CA2B39C35C0F9E1C932D31725A7310BCAEB0C37431E024E2B45320B7F2C84490C2C97351FDE34690157`,
+      },
+    });
+
+    console.log(
+      response.data.message.body.macro_calls["track.subtitles.get"].message
+        .body,
+    );
+
     if (
       response.data.message.body.macro_calls["track.subtitles.get"].message
-        .header.status_code !== 200
+        .header.status_code !== 200 ||
+      !response.data.message.body.macro_calls["track.subtitles.get"]?.message
+        ?.body?.subtitle_list?.length
     )
       return null;
     return response.data.message.body.macro_calls["track.subtitles.get"].message
