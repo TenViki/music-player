@@ -6,6 +6,7 @@ import { Song } from "../../api/songs";
 import { getImageCover } from "../../utils/songs";
 import { usePrevious } from "../../utils/usePrevious";
 import Lyrics from "./Lyrics/Lyrics";
+import DeviceCast from "./Menus/DeviceCast";
 import SongInsights from "./Menus/SongInsights";
 import "./player.scss";
 import PlayerContent from "./PlayerContent";
@@ -223,7 +224,10 @@ const Player: React.FC<PlayerProps> = ({
         </div>
 
         <div className="playlist-header-icons">
-          <div className="playlist-header-icon">
+          <div
+            className="playlist-header-icon"
+            onClick={() => setCastOpened(true)}
+          >
             <FiCast />
           </div>
           <div
@@ -294,6 +298,8 @@ const Player: React.FC<PlayerProps> = ({
         opened={insightsOpened}
         onClose={() => setInsightsOpened(false)}
       />
+
+      <DeviceCast onClose={() => setCastOpened(false)} opened={castOpened} />
     </div>
   );
 };
