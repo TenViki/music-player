@@ -20,7 +20,7 @@ const Lyrics: React.FC<LyricsProps> = ({ currentSong, audio }) => {
   const [currentLyricsIndex, setCurrentLyricsIndex] = React.useState(0);
 
   const getActiveLyrics = (currentTime: number): number => {
-    if (!lyrics) return 0;
+    if (!lyrics) return -1;
 
     for (const i in lyrics) {
       const lyric = lyrics[i];
@@ -33,7 +33,7 @@ const Lyrics: React.FC<LyricsProps> = ({ currentSong, audio }) => {
       }
     }
 
-    return 0;
+    return -1;
   };
 
   const onTimeChange = () => {
