@@ -37,11 +37,22 @@ const Player: React.FC<PlayerProps> = ({
 
   // Next song function
   const nextSong = () => {
-    console.log("next song");
     if (queue.length) {
       const nextSong = queue[0];
-      console.log("Next song:", nextSong);
       handleChangeSong(nextSong);
+    }
+  };
+
+  // Previous song function
+  const previousSong = () => {
+    if (!audio.current) return;
+    if (audio.current.currentTime > 5) {
+      audio.current.currentTime = 0;
+    } else {
+      if (queue.length) {
+        const previousSong = queue[queue.length - 1];
+        handleChangeSong(previousSong);
+      }
     }
   };
 
@@ -232,6 +243,7 @@ const Player: React.FC<PlayerProps> = ({
             volume={volume}
             setVolume={setVolume}
             nextSong={nextSong}
+            previousSong={previousSong}
           />
         )}
         <Queue queue={queue} onSelect={handleChangeSong} />

@@ -30,6 +30,7 @@ interface PlayerContentProps {
   volume: number;
   setVolume: (volume: number) => void;
   nextSong: () => void;
+  previousSong: () => void;
 }
 
 const PlayerContent: React.FC<PlayerContentProps> = ({
@@ -48,6 +49,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
   volume,
   setVolume,
   nextSong,
+  previousSong,
 }) => {
   return (
     <div className="player-song">
@@ -114,7 +116,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         >
           <FiShuffle />
         </div>
-        <div className="player-controls-icon">
+        <div className="player-controls-icon" onClick={previousSong}>
           <FiChevronLeft />
         </div>
         <div
