@@ -4,6 +4,7 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { SpotifySearch, Track } from "src/types/spotify-search.type";
 import SpotifyDLCore from "spotifydl-core";
 import SpotifyFetcher from "spotifydl-core/dist/Spotify";
+import { LyricsSearch } from "src/types/lyrics";
 
 @Injectable()
 export class SpotifyService implements OnApplicationBootstrap {
@@ -72,5 +73,20 @@ export class SpotifyService implements OnApplicationBootstrap {
       `https://open.spotify.com/track/${id}`,
       `./files/${id}.mp3`,
     );
+  }
+
+  async getSongLyrics(artist: string, title: string) {
+    const url = `https://apic-desktop.musixmatch.com/ws/1.1/macro.subtitles.get?format=json&
+      user_language=en&namespace=lyrics_synched&f_subtitle_length_max_deviation=1&subtitle_format=mxm&app_id=web-desktop-app-v1.0
+      &usertoken=190511307254ae92ff84462c794732b84754b64a2f051121eff330
+      &q_artist=${artist}&q_track=${title}`;
+    const response = await axios.get<LyricsSearch>(url);
+    if (
+      response.data.message.body.macro_calls["track.subtitles.get"].message
+        .header.status_code !== 200
+    )
+      return null;
+    return response.data.message.body.macro_calls["track.subtitles.get"].message
+      .body.subtitle_list[0].subtitle.subtitle_body;
   }
 }

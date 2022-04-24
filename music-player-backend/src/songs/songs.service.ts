@@ -9,6 +9,7 @@ import * as fs from "fs/promises";
 import { SpotifyService } from "src/spotify/spotify.service";
 import spdl from "spdl-core";
 import * as toArray from "stream-to-array";
+import axios from "axios";
 
 @Injectable()
 export class SongsService {
