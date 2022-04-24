@@ -52,6 +52,13 @@ const Player: React.FC<PlayerProps> = ({
   const audio = React.useRef<HTMLAudioElement>(null);
   const [queueOpened, setQueueOpened] = React.useState(true);
 
+  const handleCanplaythrough = () => {
+    if (!audio.current) return;
+    audio.current.currentTime = currentTime;
+    audio.current.play();
+    audio.current.removeEventListener("canplaythrough", handleCanplaythrough);
+  };
+
   const handleStatusUpdate = (status: {
     device: string;
     song: string;
@@ -64,7 +71,15 @@ const Player: React.FC<PlayerProps> = ({
     setRepeat(status.repeat);
     setPaused(status.paused);
 
-    console.log("status update", status);
+    if (status.device === socket?.id && status.device !== deviceId) {
+      const song = playlist.find((song) => song.id === status.song);
+      if (!song) return;
+
+      if (!audio.current) return;
+      audio.current.src = `${BACKEND_URL}/songs/${song.file}`;
+
+      audio.current.addEventListener("canplaythrough", handleCanplaythrough);
+    }
 
     if (status.song && status.song !== currentSong?.id) {
       const song = playlist.find((song) => song.id === status.song);
@@ -94,7 +109,7 @@ const Player: React.FC<PlayerProps> = ({
       socket.off("status-update", handleStatusUpdate);
       socket.off("time-update", handleTimeUpdate);
     };
-  }, [socket, playlist, deviceId, tapped]);
+  }, [socket, playlist, deviceId, tapped, currentTime]);
 
   const handleTimeChange = () => {
     if (audio.current && deviceId !== socket?.id) audio.current.pause();

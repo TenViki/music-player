@@ -24,6 +24,11 @@ const DeviceCast: React.FC<DeviceCastProps> = ({
 }) => {
   const socket = React.useContext(SocketContext);
 
+  const handleSelectDevice = (device: DeviceType) => {
+    console.log(device.id);
+    socket?.emit("set-status", { status: { device: device.id } });
+  };
+
   return (
     <SwipeCard
       opened={opened}
@@ -39,6 +44,7 @@ const DeviceCast: React.FC<DeviceCastProps> = ({
               key={device.id}
               device={device}
               socketId={socket?.id || ""}
+              onSelect={handleSelectDevice}
             />
           ))}
         </div>

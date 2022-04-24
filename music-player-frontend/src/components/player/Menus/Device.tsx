@@ -2,7 +2,6 @@ import React from "react";
 import { DeviceType } from "./DeviceCast";
 import {
   AiOutlineDesktop,
-  AiOutlineFullscreen,
   AiOutlineMobile,
   AiOutlineTablet,
 } from "react-icons/ai";
@@ -10,11 +9,12 @@ import {
 interface DeviceCastProps {
   device: DeviceType;
   socketId: string;
+  onSelect: (device: DeviceType) => void;
 }
 
-const Device: React.FC<DeviceCastProps> = ({ device, socketId }) => {
+const Device: React.FC<DeviceCastProps> = ({ device, socketId, onSelect }) => {
   return (
-    <div className="device">
+    <div className="device" onClick={() => onSelect(device)}>
       <div className="device-icon">
         {device.type === "desktop" && <AiOutlineDesktop />}
         {device.type === "tablet" && <AiOutlineTablet />}

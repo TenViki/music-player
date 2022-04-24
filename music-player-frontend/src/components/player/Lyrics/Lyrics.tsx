@@ -93,7 +93,7 @@ const Lyrics: React.FC<LyricsProps> = ({
       socket.emit("latency", {
         timestamp: Date.now(),
       });
-    }, 1000);
+    }, 5000);
 
     socket.on("latency", handleLatency);
 
