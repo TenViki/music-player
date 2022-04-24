@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { BsMusicNoteBeamed } from "react-icons/bs";
 import { useQuery } from "react-query";
 import { getLyrics, Song } from "../../../api/songs";
 import "./lyrics.scss";
@@ -17,7 +18,19 @@ const Lyrics: React.FC<LyricsProps> = ({ currentSong, audio }) => {
     }
   );
 
+  const lyricsRef = React.useRef<(HTMLDivElement | null)[]>([]);
+  const lyricsWrapperRef = React.useRef<HTMLDivElement | null>(null);
+
   const [currentLyricsIndex, setCurrentLyricsIndex] = React.useState(0);
+
+  useEffect(() => {
+    const scrollTop = lyricsRef.current[currentLyricsIndex]?.offsetTop;
+    if (!scrollTop) return;
+    lyricsWrapperRef.current?.scrollTo({
+      top: scrollTop - 100,
+      behavior: "smooth",
+    });
+  }, [currentLyricsIndex]);
 
   const getActiveLyrics = (currentTime: number): number => {
     if (!lyrics) return -1;
@@ -46,6 +59,10 @@ const Lyrics: React.FC<LyricsProps> = ({ currentSong, audio }) => {
     if (!audio.current) return;
 
     audio.current.addEventListener("timeupdate", onTimeChange);
+    lyricsWrapperRef.current?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
 
     return () => {
       audio.current!.removeEventListener("timeupdate", onTimeChange);
@@ -56,15 +73,16 @@ const Lyrics: React.FC<LyricsProps> = ({ currentSong, audio }) => {
 
   if (lyrics)
     return (
-      <div className="player-lyrics">
+      <div className="player-lyrics" ref={lyricsWrapperRef}>
         {lyrics.map((lyric, i) => (
           <div
-            key={lyric.text}
+            key={i}
+            ref={(el) => (lyricsRef.current[i] = el)}
             className={`lyrics-line ${
               i === currentLyricsIndex ? "active" : ""
             }`}
           >
-            {lyric.text}
+            {lyric.text ? lyric.text : <BsMusicNoteBeamed />}
           </div>
         ))}
       </div>

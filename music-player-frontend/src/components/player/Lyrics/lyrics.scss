@@ -8,13 +8,19 @@
 .player-lyrics {
   padding: 1rem;
   overflow: hidden;
-  text-align: center;
   font-size: 1.2rem;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black calc(2rem),
+    black calc(100% - 5rem),
+    transparent
+  );
 
   .lyrics-line {
     opacity: 0.5;
     transition: 0.2s;
-    white-space: nowrap;
+    margin-bottom: 0.5rem;
 
     &.active {
       opacity: 1;
