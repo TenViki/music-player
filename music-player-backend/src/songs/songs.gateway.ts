@@ -37,6 +37,7 @@ export class SongsGateway implements OnGatewayDisconnect {
   private clients: Map<string, User> = new Map();
   private userDevices: Map<string, DeviceType[]> = new Map();
   private userStatuses: Map<string, Status> = new Map();
+  private userTimes: Map<string, number> = new Map();
 
   constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
 
@@ -72,6 +73,8 @@ export class SongsGateway implements OnGatewayDisconnect {
       console.log(error);
       return wsError("Invalid token");
     }
+
+    this.userTimes.set(userId, 0);
 
     const user = await this.userRepo.findOne({ where: { id: userId } });
     this.clients.set(client.id, user);
@@ -166,5 +169,35 @@ export class SongsGateway implements OnGatewayDisconnect {
     console.log("status updated", status);
 
     this.send("status-update", newStatus, user.id);
+  }
+
+  @SubscribeMessage("get-time")
+  async handleGetTime(@ConnectedSocket() client: Socket) {
+    const user = this.clients.get(client.id);
+    if (!user) return wsError("User not authenticated");
+
+    const time = this.userTimes.get(user.id);
+    if (!time) return wsError("No time registered");
+
+    return {
+      event: "time-update",
+      data: time,
+    };
+  }
+
+  @SubscribeMessage("set-time")
+  async handleSetTime(
+    @ConnectedSocket() client: Socket,
+    @MessageBody("time") time: number,
+    @MessageBody("control") control: boolean,
+  ) {
+    const user = this.clients.get(client.id);
+    if (!user) return wsError("User not authenticated");
+
+    this.userTimes.set(user.id, time);
+
+    console.log("time updated", time);
+
+    this.send("time-update", { time, control }, user.id);
   }
 }
