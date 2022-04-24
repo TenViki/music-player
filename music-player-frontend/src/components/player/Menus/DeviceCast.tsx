@@ -45,7 +45,7 @@ const DeviceCast: React.FC<DeviceCastProps> = ({ opened, onClose }) => {
     <SwipeCard
       opened={opened}
       onClose={onClose}
-      closePercentage={50}
+      closePercentage={20}
       fullheight
     >
       <div className="device-cast">

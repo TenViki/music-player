@@ -77,6 +77,14 @@ export class SongsGateway implements OnGatewayDisconnect {
     this.clients.set(client.id, user);
     client.join(user.id);
 
+    if (!this.userDevices.has(user.id))
+      this.userStatuses.set(user.id, {
+        device: "",
+        song: "",
+        shuffle: false,
+        repeat: false,
+      });
+
     return {
       event: "auth-success",
       data: user.name,
@@ -151,8 +159,12 @@ export class SongsGateway implements OnGatewayDisconnect {
     const user = this.clients.get(client.id);
     if (!user) return wsError("User not authenticated");
 
-    this.userStatuses.set(user.id, status);
+    const oldStatus = this.userStatuses.get(user.id);
+    const newStatus = { ...oldStatus, ...status };
+    this.userStatuses.set(user.id, newStatus);
 
-    this.send("status-update", status, user.id);
+    console.log("status updated", status);
+
+    this.send("status-update", newStatus, user.id);
   }
 }

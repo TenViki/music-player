@@ -3,6 +3,7 @@ import { FiCast, FiChevronDown, FiList } from "react-icons/fi";
 import { IoPause, IoPlay } from "react-icons/io5";
 import { BACKEND_URL } from "../../api/auth";
 import { Song } from "../../api/songs";
+import { SocketContext } from "../../App";
 import { getImageCover } from "../../utils/songs";
 import { usePrevious } from "../../utils/usePrevious";
 import Lyrics from "./Lyrics/Lyrics";
@@ -17,6 +18,7 @@ interface PlayerProps {
   lastSong?: Song;
   playlist: Song[];
   handleChangeSong: (song: Song) => void;
+  setAvailable: (available: boolean) => void;
 }
 
 const Player: React.FC<PlayerProps> = ({
@@ -24,7 +26,9 @@ const Player: React.FC<PlayerProps> = ({
   playlist,
   handleChangeSong,
   lastSong,
+  setAvailable,
 }) => {
+  const socket = React.useContext(SocketContext);
   const [collapsed, setCollapsed] = React.useState(true);
   const [currentTime, setCurrentTime] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
@@ -34,6 +38,8 @@ const Player: React.FC<PlayerProps> = ({
   const [shuffle, setShuffle] = React.useState(false);
   const [volume, setVolume] = React.useState(1);
 
+  const [deviceId, setDeviceId] = React.useState<string>("");
+
   const [insightsOpened, setInsightsOpened] = React.useState(false);
   const [castOpened, setCastOpened] = React.useState(false);
 
@@ -41,6 +47,34 @@ const Player: React.FC<PlayerProps> = ({
 
   const audio = React.useRef<HTMLAudioElement>(null);
   const [queueOpened, setQueueOpened] = React.useState(true);
+
+  const handleStatusUpdate = (status: {
+    device: string;
+    song: string;
+    shuffle: boolean;
+    repeat: boolean;
+  }) => {
+    console.log("Status updated", status);
+    setDeviceId(status.device);
+    setShuffle(status.shuffle);
+    setRepeat(status.repeat);
+
+    if (status.song && status.song !== currentSong?.id) {
+      const song = playlist.find((song) => song.id === status.song);
+      song && handleChangeSong(song);
+    }
+
+    setAvailable(true);
+  };
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("status-update", handleStatusUpdate);
+
+    return () => {
+      socket.off("status-update", handleStatusUpdate);
+    };
+  }, [socket]);
 
   // Next song function
   const nextSong = () => {
@@ -81,9 +115,18 @@ const Player: React.FC<PlayerProps> = ({
   // When current song is changed, make it src of audio and all this kind of stuff
   useEffect(() => {
     if (currentSong === prevValues?.currentSong) return;
-    if (!currentSong || !audio.current) return;
-    audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
-    audio.current.play();
+
+    const device = deviceId ? deviceId : socket?.id;
+    socket?.emit("set-status", {
+      status: { song: currentSong?.id, device },
+    });
+    setAvailable(false);
+
+    if (device === socket?.id) {
+      if (!currentSong || !audio.current) return;
+      audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
+      audio.current.play();
+    }
     setCurrentTime(0);
     setPaused(false);
 
@@ -92,7 +135,7 @@ const Player: React.FC<PlayerProps> = ({
     } else {
       setQueue(processPlaylist(playlist));
     }
-  }, [currentSong, shuffle, playlist, queue]);
+  }, [currentSong, shuffle, playlist, queue, socket, deviceId]);
 
   // Every second update current time
   useEffect(() => {
@@ -106,7 +149,6 @@ const Player: React.FC<PlayerProps> = ({
   // On song end
   const handleEnd = () => {
     if (!audio.current) return;
-    console.log("Song ended, next song");
     if (repeat) {
       audio.current.currentTime = 0;
       audio.current.play();

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -10,6 +10,7 @@ import SongSearch from "../../components/filepicker/SongSearch";
 import Player from "../../components/player/Player";
 import PlaylistEntry from "../../components/playlist/PlaylistEntry";
 import { TokenManager } from "../../utils/tokenmanager";
+import { usePrevious } from "../../utils/usePrevious";
 import "./playlist.scss";
 
 const Playlist = () => {
@@ -26,10 +27,33 @@ const Playlist = () => {
   );
   const [lastSong, setLastSong] = React.useState<Song | undefined>(undefined);
 
+  const [next, setNext] = React.useState<Song | undefined>(undefined);
+  const [available, setAvailable] = React.useState(true);
+
   const handleChangeSong = (song: Song) => {
-    setLastSong(currentSong);
-    setTimeout(() => setCurrentSong(song), 10);
+    console.log("Setting next song");
+    setNext(song);
   };
+
+  const prev = usePrevious({ currentSong });
+
+  useEffect(() => {
+    console.info(
+      "Current song changed",
+      currentSong?.id,
+      prev?.currentSong?.id,
+      available
+    );
+    if (
+      !available ||
+      currentSong !== prev?.currentSong ||
+      currentSong?.id === next?.id
+    )
+      return;
+    console.info("SETTING LAST SONG TO", currentSong?.title);
+    setLastSong(currentSong);
+    setTimeout(() => setCurrentSong(next), 10);
+  }, [next, available, currentSong]);
 
   return (
     <div className="page" style={{ overflow: "auto" }}>
@@ -84,6 +108,7 @@ const Playlist = () => {
         currentSong={currentSong}
         handleChangeSong={handleChangeSong}
         lastSong={lastSong}
+        setAvailable={setAvailable}
       />
     </div>
   );
