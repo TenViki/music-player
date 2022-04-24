@@ -71,6 +71,8 @@ const Player: React.FC<PlayerProps> = ({
     setRepeat(status.repeat);
     setPaused(status.paused);
 
+    if (deviceId !== status.device) setTimeout(() => setCastOpened(false), 300);
+
     if (status.device === socket?.id && status.device !== deviceId) {
       const song = playlist.find((song) => song.id === status.song);
       if (!song) return;
