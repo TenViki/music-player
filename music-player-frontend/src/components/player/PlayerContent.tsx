@@ -21,6 +21,8 @@ interface PlayerContentProps {
   setTapped: (tapped: boolean) => void;
   handleProgressDown: () => void;
   audio: HTMLAudioElement;
+  shuffle: boolean;
+  setShuffle: (shuffle: boolean) => void;
 }
 
 const PlayerContent: React.FC<PlayerContentProps> = ({
@@ -34,6 +36,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
   setRepeat,
   setTapped,
   audio,
+  shuffle,
+  setShuffle,
 }) => {
   return (
     <div className="player-song">
@@ -70,7 +74,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         {formatTime(currentSong?.duration)}
       </div>
       <div className="player-controls">
-        <div className="player-controls-icon">
+        <div
+          className={`player-controls-icon ${shuffle ? "active" : ""}`}
+          onClick={() => setShuffle(!shuffle)}
+        >
           <FiShuffle />
         </div>
         <div className="player-controls-icon">

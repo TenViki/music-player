@@ -27,6 +27,7 @@ const Player: React.FC<PlayerProps> = ({
   const [tapped, setTapped] = React.useState(false);
   const [repeat, setRepeat] = React.useState(false);
   const [inTransition, setInTransition] = React.useState(false);
+  const [shuffle, setShuffle] = React.useState(false);
 
   const [queue, setQueue] = React.useState(playlist);
 
@@ -92,6 +93,12 @@ const Player: React.FC<PlayerProps> = ({
     audio.current.play();
     setPaused(false);
   };
+
+  // When shuffle is changed, we need to update the queue
+  useEffect(() => {
+    if (!shuffle) setQueue(processPlaylist(playlist));
+    else setQueue([...playlist].sort(() => Math.random() - 0.5));
+  }, [shuffle]);
 
   if (!currentSong)
     return (
@@ -172,6 +179,8 @@ const Player: React.FC<PlayerProps> = ({
             setPaused={setPaused}
             setCurrentTime={setCurrentTime}
             tapped={tapped}
+            shuffle={shuffle}
+            setShuffle={setShuffle}
           />
         )}
         <Queue queue={queue} onSelect={handleChangeSong} />
