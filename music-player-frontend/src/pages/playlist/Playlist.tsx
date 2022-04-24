@@ -1,16 +1,16 @@
 import React from "react";
+import { useQuery } from "react-query";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { getPlaylist, Song } from "../../api/songs";
 import { UserContext } from "../../App";
+import noData from "../../assets/no_data.svg";
 import Button from "../../components/button/Button";
+import SongSearch from "../../components/filepicker/SongSearch";
+import Player from "../../components/player/Player";
+import PlaylistEntry from "../../components/playlist/PlaylistEntry";
 import { TokenManager } from "../../utils/tokenmanager";
 import "./playlist.scss";
-import noData from "../../assets/no_data.svg";
-import SongSearch from "../../components/filepicker/SongSearch";
-import { useQuery } from "react-query";
-import { getPlaylist, Song } from "../../api/songs";
-import PlaylistEntry from "../../components/playlist/PlaylistEntry";
-import Player from "../../components/player/Player";
 
 const Playlist = () => {
   const { setUser, user } = React.useContext(UserContext);
@@ -24,6 +24,12 @@ const Playlist = () => {
   const [currentSong, setCurrentSong] = React.useState<Song | undefined>(
     undefined
   );
+  const [lastSong, setLastSong] = React.useState<Song | undefined>(undefined);
+
+  const handleChangeSong = (song: Song) => {
+    setLastSong(currentSong);
+    setTimeout(() => setCurrentSong(song), 10);
+  };
 
   return (
     <div className="page">
@@ -76,7 +82,8 @@ const Playlist = () => {
       <Player
         playlist={playlist || []}
         currentSong={currentSong}
-        setCurrentSong={setCurrentSong}
+        handleChangeSong={handleChangeSong}
+        lastSong={lastSong}
       />
     </div>
   );

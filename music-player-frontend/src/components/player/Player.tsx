@@ -10,20 +10,23 @@ import Queue from "./Queue";
 
 interface PlayerProps {
   currentSong?: Song;
+  lastSong?: Song;
   playlist: Song[];
-  setCurrentSong: (song: Song) => void;
+  handleChangeSong: (song: Song) => void;
 }
 
 const Player: React.FC<PlayerProps> = ({
   currentSong,
   playlist,
-  setCurrentSong,
+  handleChangeSong,
+  lastSong,
 }) => {
   const [collapsed, setCollapsed] = React.useState(true);
   const [currentTime, setCurrentTime] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
   const [tapped, setTapped] = React.useState(false);
   const [repeat, setRepeat] = React.useState(false);
+  const [inTransition, setInTransition] = React.useState(false);
 
   const [queue, setQueue] = React.useState(playlist);
 
@@ -60,12 +63,6 @@ const Player: React.FC<PlayerProps> = ({
     }
   };
 
-  const handleSongSelect = (song: Song) => {
-    setCurrentTime(0);
-    setPaused(false);
-    setCurrentSong(song);
-  };
-
   useEffect(() => {
     audio.current?.addEventListener("ended", handleEnd);
 
@@ -80,6 +77,13 @@ const Player: React.FC<PlayerProps> = ({
       audio.current.play();
     }
   }, [paused]);
+
+  useEffect(() => {
+    setInTransition(true);
+    setTimeout(() => {
+      setInTransition(false);
+    }, 550);
+  }, [lastSong]);
 
   const handleProgressDown = () => {
     if (!audio.current) return;
@@ -105,6 +109,13 @@ const Player: React.FC<PlayerProps> = ({
       }`}
     >
       <audio ref={audio} />
+      <div
+        className={`player-background-transition ${
+          inTransition ? "transitioning" : ""
+        }`}
+      >
+        <img src={lastSong?.cover} alt="" />
+      </div>
       <div className="player-background">
         {currentSong?.cover && (
           <img
@@ -114,6 +125,7 @@ const Player: React.FC<PlayerProps> = ({
           />
         )}
       </div>
+      <div className="player-background-blur"></div>
       <div className="player-header">
         <div className="player-header-cover">
           {getImageCover(currentSong?.cover || "")}
@@ -162,7 +174,7 @@ const Player: React.FC<PlayerProps> = ({
         />
       )}
 
-      <Queue queue={queue} onSelect={handleSongSelect} />
+      <Queue queue={queue} onSelect={handleChangeSong} />
     </div>
   );
 };
