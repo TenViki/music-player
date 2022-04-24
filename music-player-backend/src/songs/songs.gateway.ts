@@ -200,4 +200,12 @@ export class SongsGateway implements OnGatewayDisconnect {
 
     this.send("time-update", { time, control }, user.id);
   }
+
+  @SubscribeMessage("latency")
+  async handleLatency(@MessageBody("timestamp") timestamp: number) {
+    return {
+      event: "latency",
+      data: { timestamp },
+    };
+  }
 }

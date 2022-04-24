@@ -21,7 +21,6 @@ const DeviceCast: React.FC<DeviceCastProps> = ({
   opened,
   onClose,
   devices,
-  setDevices,
 }) => {
   const socket = React.useContext(SocketContext);
 
