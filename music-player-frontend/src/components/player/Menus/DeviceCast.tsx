@@ -8,32 +8,27 @@ interface DeviceCastProps {
   onClose: () => void;
 }
 
+interface DeviceType {
+  id: string;
+  type: string;
+  name: string;
+}
+
 const DeviceCast: React.FC<DeviceCastProps> = ({ opened, onClose }) => {
   const socket = React.useContext(SocketContext);
-  const handleDeviceConnect = (device: {
-    id: string;
-    type: string;
-    name: string;
-  }) => {
-    console.log("Device connected: ", device);
-  };
 
-  const handleDeviceDisconnect = (device: {
-    id: string;
-    type: string;
-    name: string;
-  }) => {
-    console.log("Device disconnected: ", device);
+  const handleDeviceUpdate = (devices: DeviceType[]) => {
+    console.log("Device update: ", devices);
   };
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("device-connect", handleDeviceConnect);
-    socket.on("device-disconnect", handleDeviceDisconnect);
+    console.log("Registering events");
+
+    socket.on("device-update", handleDeviceUpdate);
 
     return () => {
-      socket.off("device-connect", handleDeviceConnect);
-      socket.off("device-disconnect", handleDeviceDisconnect);
+      socket.off("device-update", handleDeviceUpdate);
     };
   }, [socket]);
 

@@ -28,7 +28,7 @@ interface DeviceType {
 export class SongsGateway implements OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   private clients: Map<string, User> = new Map();
-  private userDevices: Map<User, DeviceType[]> = new Map();
+  private userDevices: Map<string, DeviceType[]> = new Map();
 
   constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
 
@@ -36,12 +36,13 @@ export class SongsGateway implements OnGatewayDisconnect {
     // Remove device
     const user = this.clients.get(client.id);
     if (!user) return;
-    const devices = this.userDevices.get(user);
+    const devices = this.userDevices.get(user.id);
     if (!devices) return;
     const device = devices.find((d) => d.id === client.id);
     if (!device) return;
     devices.splice(devices.indexOf(device), 1);
-    this.send("device-disconnect", device, user.id);
+
+    this.send("device-update", devices, user.id);
 
     this.clients.delete(client.id);
   }
@@ -96,12 +97,29 @@ export class SongsGateway implements OnGatewayDisconnect {
       type: deviceType,
     } as DeviceType;
 
-    if (!this.userDevices.has(user)) {
-      this.userDevices.set(user, []);
+    console.log("new device!", device);
+
+    if (!this.userDevices.has(user.id)) {
+      this.userDevices.set(user.id, []);
+      console.log("new user!");
     }
 
-    this.userDevices.get(user).push(device);
+    const devices = this.userDevices.get(user.id);
 
-    this.send("device-connect", device, user.id);
+    this.send("device-update", devices, user.id);
+  }
+
+  @SubscribeMessage("get-devices")
+  async handleGetDevices(@ConnectedSocket() client: Socket) {
+    const user = this.clients.get(client.id);
+    if (!user) return wsError("User not authenticated");
+
+    const devices = this.userDevices.get(user.id);
+    if (!devices) return wsError("No devices registered");
+
+    return {
+      event: "device-update",
+      data: devices,
+    };
   }
 }
