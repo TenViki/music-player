@@ -69,15 +69,28 @@ const Player: React.FC<PlayerProps> = ({
     setAvailable(true);
   };
 
+  const handleTimeUpdate = (time: { time: number; control: boolean }) => {
+    if (time.control) {
+      setCurrentTime(time.time);
+      audio.current && (audio.current.currentTime = time.time);
+    } else if (socket?.id !== deviceId) {
+      console.log(tapped);
+      !tapped && setCurrentTime(time.time);
+    }
+  };
+
   useEffect(() => {
     if (!socket) return;
     socket.on("status-update", handleStatusUpdate);
+    socket.on("time-update", handleTimeUpdate);
+
     socket.emit("get-status");
 
     return () => {
       socket.off("status-update", handleStatusUpdate);
+      socket.off("time-update", handleTimeUpdate);
     };
-  }, [socket, playlist]);
+  }, [socket, playlist, deviceId, tapped]);
 
   // Next song function
   const nextSong = () => {
@@ -134,6 +147,8 @@ const Player: React.FC<PlayerProps> = ({
       if (!currentSong || !audio.current) return;
       audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
       audio.current.play();
+    } else {
+      audio.current?.pause();
     }
     setCurrentTime(0);
     setPaused(false);
@@ -148,11 +163,18 @@ const Player: React.FC<PlayerProps> = ({
   // Every second update current time
   useEffect(() => {
     const interval = setInterval(() => {
-      !tapped && setCurrentTime(audio.current?.currentTime || 0);
+      if (deviceId === socket?.id) {
+        !tapped && setCurrentTime(audio.current?.currentTime || 0);
+        socket.emit("set-time", {
+          control: false,
+          time: audio.current?.currentTime || 0,
+        });
+        console.log("Setting time");
+      }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [currentSong, tapped, audio]);
+  }, [currentSong, tapped, audio, deviceId, socket]);
 
   // On song end
   const handleEnd = () => {
@@ -193,8 +215,15 @@ const Player: React.FC<PlayerProps> = ({
   const handleProgressUp = () => {
     if (!audio.current) return;
     setTapped(false);
-    audio.current.currentTime = currentTime;
-    audio.current.play();
+    if (deviceId === socket?.id) {
+      audio.current.currentTime = currentTime;
+      audio.current.play();
+    } else {
+      socket?.emit("set-time", {
+        control: true,
+        time: currentTime,
+      });
+    }
     setPaused(false);
   };
 

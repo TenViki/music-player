@@ -111,7 +111,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
       </div>
 
       <div className="player-progress">
-        {formatTime(audio.currentTime || 0)}
+        {formatTime(currentTime || 0)}
         <input
           type="range"
           min={0}
