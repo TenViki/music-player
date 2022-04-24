@@ -8,6 +8,7 @@ import { useQuery } from "react-query";
 import { meRequest, User } from "./api/auth";
 import Playlist from "./pages/playlist/Playlist";
 import { io, Socket } from "socket.io-client";
+import { getDeviceType } from "./utils/device";
 
 export const UserContext = React.createContext<{
   user: User | undefined;
@@ -21,7 +22,7 @@ function App() {
   const [user, setUser] = useState<User>();
 
   const { refetch: refetchUser } = useQuery("user", meRequest, {
-    enabled: !!TokenManager.token,
+    enabled: !!TokenManager.token && !user,
     onSuccess: setUser,
   });
 
@@ -33,20 +34,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("User updated:", user);
     if (!user) {
-      console.log("Disconnecting socket", socket?.id);
       socket?.disconnect();
       setSocket(undefined);
     }
     if (user) navigate("/playlist");
 
     if (!user || socket?.connected) return;
-    const socketObj = io("http://localhost:5000");
-    console.log("Conencting with socket");
+    const socketObj = io("http://10.0.0.16:5000");
 
     socketObj.on("auth-success", (data) => {
-      console.log("Socket authorizated!");
+      console.log("Socket authorized!", data);
       setSocket(socketObj);
     });
 
@@ -56,6 +54,22 @@ function App() {
       console.log("Socket error: ", data);
     });
   }, [user, socket]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    // Get system name (for example: "Redmi note 8")
+    const deviceAx = navigator?.userAgent?.match(/\(([^)]+)\)/);
+    const deviceName = deviceAx?.[1];
+
+    // Get device type (mobile, tablet, desktop)
+    const deviceType = getDeviceType();
+
+    socket.emit("register-device", {
+      name: deviceName,
+      type: deviceType,
+    });
+  }, [socket]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
