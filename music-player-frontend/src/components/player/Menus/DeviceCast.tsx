@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { SocketContext } from "../../../App";
 import SwipeCard from "../../swipecard/SwipeCard";
+import Device from "./Device";
 import "./device-cast.scss";
 
 interface DeviceCastProps {
@@ -8,7 +9,7 @@ interface DeviceCastProps {
   onClose: () => void;
 }
 
-interface DeviceType {
+export interface DeviceType {
   id: string;
   type: string;
   name: string;
@@ -16,6 +17,7 @@ interface DeviceType {
 
 const DeviceCast: React.FC<DeviceCastProps> = ({ opened, onClose }) => {
   const socket = React.useContext(SocketContext);
+  const [devices, setDevices] = React.useState<DeviceType[]>([]);
 
   useEffect(() => {
     if (!socket) return;
@@ -25,6 +27,7 @@ const DeviceCast: React.FC<DeviceCastProps> = ({ opened, onClose }) => {
 
   const handleDeviceUpdate = (devices: DeviceType[]) => {
     console.log("Device update: ", devices);
+    setDevices(devices);
   };
 
   useEffect(() => {
@@ -39,9 +42,23 @@ const DeviceCast: React.FC<DeviceCastProps> = ({ opened, onClose }) => {
   }, [socket]);
 
   return (
-    <SwipeCard opened={opened} onClose={onClose} closePercentage={50}>
+    <SwipeCard
+      opened={opened}
+      onClose={onClose}
+      closePercentage={50}
+      fullheight
+    >
       <div className="device-cast">
         <h2 className="title-small">Device Cast</h2>
+        <div className="devices">
+          {devices.map((device) => (
+            <Device
+              key={device.id}
+              device={device}
+              socketId={socket?.id || ""}
+            />
+          ))}
+        </div>
       </div>
     </SwipeCard>
   );

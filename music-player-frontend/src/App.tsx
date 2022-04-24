@@ -53,7 +53,11 @@ function App() {
     socketObj.on("error", (data) => {
       console.log("Socket error: ", data);
     });
-  }, [user, socket]);
+
+    return () => {
+      socketObj.disconnect();
+    };
+  }, [user]);
 
   useEffect(() => {
     if (!socket) return;
