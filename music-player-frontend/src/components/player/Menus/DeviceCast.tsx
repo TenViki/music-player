@@ -17,6 +17,12 @@ interface DeviceType {
 const DeviceCast: React.FC<DeviceCastProps> = ({ opened, onClose }) => {
   const socket = React.useContext(SocketContext);
 
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.emit("get-devices");
+  }, []);
+
   const handleDeviceUpdate = (devices: DeviceType[]) => {
     console.log("Device update: ", devices);
   };

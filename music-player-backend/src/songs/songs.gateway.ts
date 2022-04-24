@@ -105,6 +105,7 @@ export class SongsGateway implements OnGatewayDisconnect {
     }
 
     const devices = this.userDevices.get(user.id);
+    devices.push(device);
 
     this.send("device-update", devices, user.id);
   }
