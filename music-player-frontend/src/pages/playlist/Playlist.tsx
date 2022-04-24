@@ -31,7 +31,6 @@ const Playlist = () => {
   const [available, setAvailable] = React.useState(true);
 
   const handleChangeSong = (song: Song) => {
-    console.log("Setting next song");
     setNext(song);
   };
 
@@ -44,7 +43,6 @@ const Playlist = () => {
       prev?.currentSong?.id,
       available
     );
-    console.log(available, next?.title, currentSong?.title);
     if (
       !available ||
       currentSong !== prev?.currentSong ||

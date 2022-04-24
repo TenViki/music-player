@@ -55,14 +55,12 @@ const Player: React.FC<PlayerProps> = ({
     shuffle: boolean;
     repeat: boolean;
   }) => {
-    console.log("Status updated", status);
     setDeviceId(status.device);
     setShuffle(status.shuffle);
     setRepeat(status.repeat);
 
     if (status.song && status.song !== currentSong?.id) {
       const song = playlist.find((song) => song.id === status.song);
-      console.log("Song updated", song, status.song);
       song && handleChangeSong(song);
     }
 
@@ -74,7 +72,6 @@ const Player: React.FC<PlayerProps> = ({
       setCurrentTime(time.time);
       audio.current && (audio.current.currentTime = time.time);
     } else if (socket?.id !== deviceId) {
-      console.log(tapped);
       !tapped && setCurrentTime(time.time);
     }
   };
@@ -91,6 +88,18 @@ const Player: React.FC<PlayerProps> = ({
       socket.off("time-update", handleTimeUpdate);
     };
   }, [socket, playlist, deviceId, tapped]);
+
+  const handleTimeChange = () => {
+    if (audio.current && deviceId !== socket?.id) audio.current.pause();
+  };
+
+  useEffect(() => {
+    audio.current?.addEventListener("timeupdate", handleTimeChange);
+
+    return () => {
+      audio.current?.removeEventListener("timeupdate", handleTimeChange);
+    };
+  }, [audio, deviceId, socket]);
 
   // Next song function
   const nextSong = () => {
@@ -136,8 +145,6 @@ const Player: React.FC<PlayerProps> = ({
       deviceId && devices.find((d) => d.id === deviceId)
         ? deviceId
         : socket?.id;
-    console.log("Device", device, devices, socket?.id);
-    console.log(device);
     socket?.emit("set-status", {
       status: { song: currentSong?.id, device },
     });
@@ -169,7 +176,6 @@ const Player: React.FC<PlayerProps> = ({
           control: false,
           time: audio.current?.currentTime || 0,
         });
-        console.log("Setting time");
       }
     }, 1000);
 
@@ -261,7 +267,6 @@ const Player: React.FC<PlayerProps> = ({
       }`}
     >
       <audio ref={audio} />
-      {socket?.id}
       <div
         className={`player-background-transition ${
           inTransition ? "transitioning" : ""
@@ -354,7 +359,12 @@ const Player: React.FC<PlayerProps> = ({
           </div>
 
           <div className="player-slider-item">
-            <Lyrics currentSong={currentSong} audio={audio} />
+            <Lyrics
+              currentSong={currentSong}
+              audio={audio}
+              currentTime={currentTime}
+              deviceId={deviceId}
+            />
           </div>
         </div>
         <div className="player-buttons">

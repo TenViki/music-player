@@ -38,8 +38,6 @@ const DeviceCast: React.FC<DeviceCastProps> = ({
 
   useEffect(() => {
     if (!socket) return;
-    console.log("Registering events");
-
     socket.on("device-update", handleDeviceUpdate);
 
     return () => {

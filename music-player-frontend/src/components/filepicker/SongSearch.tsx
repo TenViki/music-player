@@ -35,7 +35,6 @@ const SongSearch: React.FC<FilePickerProps> = ({ onClose, opened }) => {
     // If search is changed, request new songs
     const intervalId = setInterval(async () => {
       if (search !== oldSearch && search !== "") {
-        console.log(search, oldSearch);
         setOldSearch(search);
         const songs = await searchSongs(search);
         setResults(songs);

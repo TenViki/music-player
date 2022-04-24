@@ -70,7 +70,6 @@ export class SongsGateway implements OnGatewayDisconnect {
         }
       ).id;
     } catch (error) {
-      console.log(error);
       return wsError("Invalid token");
     }
 
@@ -169,8 +168,6 @@ export class SongsGateway implements OnGatewayDisconnect {
     const newStatus = { ...oldStatus, ...status };
     this.userStatuses.set(user.id, newStatus);
 
-    console.log("status updated", status);
-
     this.send("status-update", newStatus, user.id);
   }
 
@@ -198,8 +195,6 @@ export class SongsGateway implements OnGatewayDisconnect {
     if (!user) return wsError("User not authenticated");
 
     this.userTimes.set(user.id, time);
-
-    console.log("time updated", time);
 
     this.send("time-update", { time, control }, user.id);
   }

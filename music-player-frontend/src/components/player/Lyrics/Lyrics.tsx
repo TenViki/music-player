@@ -2,14 +2,22 @@ import React, { useEffect } from "react";
 import { BsMusicNoteBeamed } from "react-icons/bs";
 import { useQuery } from "react-query";
 import { getLyrics, Song } from "../../../api/songs";
+import { SocketContext } from "../../../App";
 import "./lyrics.scss";
 
 interface LyricsProps {
   currentSong?: Song;
   audio: React.RefObject<HTMLAudioElement | null>;
+  deviceId: string;
+  currentTime: number;
 }
 
-const Lyrics: React.FC<LyricsProps> = ({ currentSong, audio }) => {
+const Lyrics: React.FC<LyricsProps> = ({
+  currentSong,
+  audio,
+  deviceId,
+  currentTime,
+}) => {
   const { data: lyrics, isLoading } = useQuery(
     ["lyrics", currentSong?.id],
     () => getLyrics(currentSong!.id),
@@ -20,6 +28,7 @@ const Lyrics: React.FC<LyricsProps> = ({ currentSong, audio }) => {
 
   const lyricsRef = React.useRef<(HTMLDivElement | null)[]>([]);
   const lyricsWrapperRef = React.useRef<HTMLDivElement | null>(null);
+  const socket = React.useContext(SocketContext);
 
   const [currentLyricsIndex, setCurrentLyricsIndex] = React.useState(0);
 
@@ -57,17 +66,28 @@ const Lyrics: React.FC<LyricsProps> = ({ currentSong, audio }) => {
 
   useEffect(() => {
     if (!audio.current) return;
+    if (deviceId !== socket?.id) return;
 
     audio.current.addEventListener("timeupdate", onTimeChange);
-    lyricsWrapperRef.current?.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
 
     return () => {
       audio.current?.removeEventListener("timeupdate", onTimeChange);
     };
-  }, [audio, lyrics]);
+  }, [lyrics]);
+
+  useEffect(() => {
+    if (deviceId === socket?.id) return;
+    if (!lyrics) return;
+
+    setCurrentLyricsIndex(getActiveLyrics(currentTime));
+  }, [lyrics, currentTime, deviceId, socket]);
+
+  useEffect(() => {
+    lyricsWrapperRef.current?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [lyrics]);
 
   if (isLoading) return <div className="lyrics-loading">Loading...</div>;
 
