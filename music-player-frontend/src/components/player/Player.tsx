@@ -428,6 +428,7 @@ const Player: React.FC<PlayerProps> = ({
         opened={castOpened}
         devices={devices}
         setDevices={setDevices}
+        deviceId={deviceId}
       />
     </div>
   );

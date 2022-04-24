@@ -10,11 +10,20 @@ interface DeviceCastProps {
   device: DeviceType;
   socketId: string;
   onSelect: (device: DeviceType) => void;
+  activeDevice: string;
 }
 
-const Device: React.FC<DeviceCastProps> = ({ device, socketId, onSelect }) => {
+const Device: React.FC<DeviceCastProps> = ({
+  device,
+  socketId,
+  onSelect,
+  activeDevice,
+}) => {
   return (
-    <div className="device" onClick={() => onSelect(device)}>
+    <div
+      className={`device ${activeDevice === device.id ? "active" : ""}`}
+      onClick={() => onSelect(device)}
+    >
       <div className="device-icon">
         {device.type === "desktop" && <AiOutlineDesktop />}
         {device.type === "tablet" && <AiOutlineTablet />}
@@ -28,6 +37,13 @@ const Device: React.FC<DeviceCastProps> = ({ device, socketId, onSelect }) => {
         </div>
         <div className="device-name">{device.name}</div>
       </div>
+      {activeDevice === device.id && (
+        <div className={"device-icon-bar"}>
+          <span />
+          <span />
+          <span />
+        </div>
+      )}
     </div>
   );
 };

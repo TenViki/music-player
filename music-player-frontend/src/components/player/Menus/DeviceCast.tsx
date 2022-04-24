@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FiLoader } from "react-icons/fi";
 import { SocketContext } from "../../../App";
 import SwipeCard from "../../swipecard/SwipeCard";
 import Device from "./Device";
@@ -9,6 +11,7 @@ interface DeviceCastProps {
   onClose: () => void;
   devices: DeviceType[];
   setDevices: (devices: DeviceType[]) => void;
+  deviceId: string;
 }
 
 export interface DeviceType {
@@ -21,6 +24,7 @@ const DeviceCast: React.FC<DeviceCastProps> = ({
   opened,
   onClose,
   devices,
+  deviceId,
 }) => {
   const socket = React.useContext(SocketContext);
 
@@ -45,8 +49,14 @@ const DeviceCast: React.FC<DeviceCastProps> = ({
               device={device}
               socketId={socket?.id || ""}
               onSelect={handleSelectDevice}
+              activeDevice={deviceId}
             />
           ))}
+        </div>
+
+        <div className="device-cast-footer">
+          <AiOutlineLoading3Quarters />
+          Looking for other devices...
         </div>
       </div>
     </SwipeCard>
