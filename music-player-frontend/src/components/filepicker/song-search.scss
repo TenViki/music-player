@@ -1,4 +1,4 @@
-.song-search{
+.song-search {
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -8,31 +8,41 @@
     margin: 0 1rem;
     margin-bottom: 1rem;
   }
-  .textfield{
+  .textfield {
     margin-bottom: 0;
-  margin: 0 1rem;
-
+    margin: 0 1rem;
   }
 }
 
-.song-search-results{
+.song-search-results {
   overflow: auto;
   padding: 1.5rem 1rem 1rem 1rem;
 
-  -webkit-mask-image: linear-gradient(to bottom, transparent, transparent .2rem, black 2rem);
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    transparent 0.2rem,
+    black 2rem
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    transparent 0.2rem,
+    black 2rem
+  );
 }
 
-.song-search-entry{
+.song-search-entry {
   display: flex;
   align-items: center;
-  transition: .2s;
+  transition: 0.2s;
 
   &:active {
-    transform: scale(.95);
+    transform: scale(0.95);
   }
 
   &:not(:last-child) {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
   }
 
   .song-search-cover {
@@ -41,7 +51,7 @@
     height: 4rem;
     overflow: hidden;
     margin-right: 1rem;
-    border-radius: .5rem;
+    border-radius: 0.5rem;
 
     img {
       width: 100%;
@@ -50,13 +60,13 @@
     }
   }
 
-  .song-search-info{
+  .song-search-info {
     flex-grow: 1;
   }
 
-  .song-search-artist, 
-  .song-search-duration{
-    font-size: .9rem;
+  .song-search-artist,
+  .song-search-duration {
+    font-size: 0.9rem;
     color: #999;
   }
 }

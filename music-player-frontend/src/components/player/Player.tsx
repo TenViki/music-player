@@ -158,23 +158,24 @@ const Player: React.FC<PlayerProps> = ({
         </div>
       </div>
 
-      {audio.current && (
-        <PlayerContent
-          audio={audio.current!}
-          currentSong={currentSong}
-          currentTime={currentTime}
-          handleProgressDown={handleProgressDown}
-          paused={paused}
-          repeat={repeat}
-          setRepeat={setRepeat}
-          setTapped={setTapped}
-          setPaused={setPaused}
-          setCurrentTime={setCurrentTime}
-          tapped={tapped}
-        />
-      )}
-
-      <Queue queue={queue} onSelect={handleChangeSong} />
+      <div className="player-content">
+        {audio.current && (
+          <PlayerContent
+            audio={audio.current!}
+            currentSong={currentSong}
+            currentTime={currentTime}
+            handleProgressDown={handleProgressDown}
+            paused={paused}
+            repeat={repeat}
+            setRepeat={setRepeat}
+            setTapped={setTapped}
+            setPaused={setPaused}
+            setCurrentTime={setCurrentTime}
+            tapped={tapped}
+          />
+        )}
+        <Queue queue={queue} onSelect={handleChangeSong} />
+      </div>
     </div>
   );
 };
