@@ -1,23 +1,23 @@
 .playlist-entry {
   display: flex;
   align-items: center;
-  transition: .2s;
+  transition: 0.2s;
 
   &:active {
-    transform: scale(.95);
+    transform: scale(0.95);
   }
-
 
   &:not(:last-child) {
     margin-bottom: 1rem;
   }
-  
-  .playlist-entry-cover{
+
+  .playlist-entry-cover {
     width: 4rem;
     height: 4rem;
     overflow: hidden;
     margin-right: 1rem;
-    border-radius: .5rem;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
 
     img {
       width: 100%;
@@ -30,9 +30,15 @@
     flex-grow: 1;
   }
 
-  .playlist-entry-artist, 
-  .playlist-entry-time{
-    font-size: .9rem;
+  .playlist-entry-artist,
+  .playlist-entry-time {
+    font-size: 0.9rem;
     color: #999;
+  }
+
+  .playlist-entry-lyrics {
+    display: flex;
+    margin-right: 0.5rem;
+    opacity: 0.5;
   }
 }

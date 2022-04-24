@@ -2,6 +2,7 @@ import React from "react";
 import { Song } from "../../api/songs";
 import { formatTime, getImageCover } from "../../utils/songs";
 import "./playlist-entry.scss";
+import lyrics from "../../assets/lyrics.svg";
 
 interface PlaylistEntryProps {
   song: Song;
@@ -16,6 +17,12 @@ const PlaylistEntry: React.FC<PlaylistEntryProps> = ({ song, onSelect }) => {
         <div className="playlist-entry-title">{song.title}</div>
         <div className="playlist-entry-artist">{song.artist}</div>
       </div>
+
+      {song.lyrics && (
+        <div className="playlist-entry-lyrics">
+          <img src={lyrics} alt="Lyrics" />
+        </div>
+      )}
 
       <div className="playlist-entry-time">{formatTime(song.duration)}</div>
     </div>
