@@ -7,11 +7,14 @@ import { Route, Routes, useNavigate } from "react-router";
 import { useQuery } from "react-query";
 import { meRequest, User } from "./api/auth";
 import Playlist from "./pages/playlist/Playlist";
+import { io, Socket } from "socket.io-client";
 
 export const UserContext = React.createContext<{
   user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
 }>({ user: undefined, setUser: () => {} });
+
+export const SocketContext = React.createContext<Socket | undefined>(undefined);
 
 function App() {
   const navigate = useNavigate();
@@ -22,14 +25,37 @@ function App() {
     onSuccess: setUser,
   });
 
+  const [socket, setSocket] = useState<Socket>();
+
   useEffect(() => {
     TokenManager.loadToken();
     refetchUser();
   }, []);
 
   useEffect(() => {
+    console.log("User updated:", user);
+    if (!user) {
+      console.log("Disconnecting socket", socket?.id);
+      socket?.disconnect();
+      setSocket(undefined);
+    }
     if (user) navigate("/playlist");
-  }, [user]);
+
+    if (!user || socket?.connected) return;
+    const socketObj = io("http://localhost:5000");
+    console.log("Conencting with socket");
+
+    socketObj.on("auth-success", (data) => {
+      console.log("Socket authorizated!");
+      setSocket(socketObj);
+    });
+
+    socketObj.emit("auth", { token: TokenManager.token });
+
+    socketObj.on("error", (data) => {
+      console.log("Socket error: ", data);
+    });
+  }, [user, socket]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

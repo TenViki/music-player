@@ -14,8 +14,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 const wsError = (message: string) => ({
-  type: "error",
-  message,
+  event: "error",
+  data: message,
 });
 
 interface DeviceType {
@@ -32,6 +32,7 @@ export class SongsGateway implements OnGatewayDisconnect {
   constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
 
   handleDisconnect(client: Socket) {
+    console.log("Client disconnected", client.id);
     this.clients.delete(client.id);
   }
 
@@ -44,11 +45,12 @@ export class SongsGateway implements OnGatewayDisconnect {
     let userId: string;
     try {
       userId = (
-        jwt.verify(token, process.env.JWT_SECRET) as {
+        jwt.verify(token, process.env.JWT_KEY) as {
           id: string;
         }
       ).id;
     } catch (error) {
+      console.log(error);
       return wsError("Invalid token");
     }
 
@@ -57,8 +59,8 @@ export class SongsGateway implements OnGatewayDisconnect {
     client.join(user.id);
 
     return {
-      event: "events",
-      data: "Hello World",
+      event: "auth-success",
+      data: user.name,
     };
   }
 
