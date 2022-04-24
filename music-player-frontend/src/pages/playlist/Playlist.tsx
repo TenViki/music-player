@@ -35,8 +35,8 @@ const Playlist = () => {
   const [next, setNext] = React.useState<Song | undefined>(undefined);
   const [available, setAvailable] = React.useState(true);
 
-  const handleChangeSong = (song: Song) => {
-    setNext(song);
+  const handleChangeSong = (song: Song | null) => {
+    setNext(song || undefined);
   };
 
   const prev = usePrevious({ currentSong });
@@ -71,9 +71,10 @@ const Playlist = () => {
     )
       return;
     console.info("SETTING LAST SONG TO", currentSong?.title);
+    if (!next) socket?.emit("set-status", { status: { song: "" } });
     setLastSong(currentSong);
     setTimeout(() => setCurrentSong(next), 10);
-  }, [next, available, currentSong]);
+  }, [next, available, currentSong, socket]);
 
   return (
     <div className="page" style={{ overflow: "auto" }}>

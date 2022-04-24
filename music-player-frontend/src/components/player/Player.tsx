@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FiCast, FiChevronDown, FiList } from "react-icons/fi";
+import { FiCast, FiChevronDown, FiList, FiX } from "react-icons/fi";
 import { IoPause, IoPlay } from "react-icons/io5";
 import { BACKEND_URL } from "../../api/auth";
 import { Song } from "../../api/songs";
@@ -17,7 +17,7 @@ interface PlayerProps {
   currentSong?: Song;
   lastSong?: Song;
   playlist: Song[];
-  handleChangeSong: (song: Song) => void;
+  handleChangeSong: (song: Song | null) => void;
   setAvailable: (available: boolean) => void;
   devices: DeviceType[];
   setDevices: (devices: DeviceType[]) => void;
@@ -71,6 +71,11 @@ const Player: React.FC<PlayerProps> = ({
     setRepeat(status.repeat);
     setPaused(status.paused);
 
+    if (status.song === "" && status.device) {
+      handleChangeSong(null);
+      setAvailable(true);
+      return;
+    }
     if (deviceId !== status.device) setTimeout(() => setCastOpened(false), 300);
 
     if (status.device === socket?.id && status.device !== deviceId) {
@@ -346,6 +351,12 @@ const Player: React.FC<PlayerProps> = ({
         </div>
 
         <div className="playlist-header-icons">
+          <div
+            className="playlist-header-icon"
+            onClick={() => handleChangeSong(null)}
+          >
+            <FiX />
+          </div>
           <div
             className="playlist-header-icon"
             onClick={() => setCastOpened(true)}
