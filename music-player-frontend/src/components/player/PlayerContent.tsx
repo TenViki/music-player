@@ -32,7 +32,6 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
   setPaused,
   repeat,
   setRepeat,
-  tapped,
   setTapped,
   audio,
 }) => {

@@ -1,26 +1,24 @@
 import React, { useEffect } from "react";
-import { Song } from "../../api/songs";
-import { formatTime, getImageCover } from "../../utils/songs";
-import {
-  FiChevronDown,
-  FiChevronLeft,
-  FiChevronRight,
-  FiRepeat,
-  FiShuffle,
-} from "react-icons/fi";
-import "./player.scss";
-import { BACKEND_URL } from "../../api/auth";
-import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
+import { FiChevronDown } from "react-icons/fi";
 import { IoPause, IoPlay } from "react-icons/io5";
+import { BACKEND_URL } from "../../api/auth";
+import { Song } from "../../api/songs";
+import { getImageCover } from "../../utils/songs";
+import "./player.scss";
 import PlayerContent from "./PlayerContent";
 import Queue from "./Queue";
 
 interface PlayerProps {
   currentSong?: Song;
   playlist: Song[];
+  setCurrentSong: (song: Song) => void;
 }
 
-const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
+const Player: React.FC<PlayerProps> = ({
+  currentSong,
+  playlist,
+  setCurrentSong,
+}) => {
   const [collapsed, setCollapsed] = React.useState(true);
   const [currentTime, setCurrentTime] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
@@ -60,6 +58,12 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
       audio.current.currentTime = 0;
       audio.current.play();
     }
+  };
+
+  const handleSongSelect = (song: Song) => {
+    setCurrentTime(0);
+    setPaused(false);
+    setCurrentSong(song);
   };
 
   useEffect(() => {
@@ -158,7 +162,7 @@ const Player: React.FC<PlayerProps> = ({ currentSong, playlist }) => {
         />
       )}
 
-      <Queue queue={queue} />
+      <Queue queue={queue} onSelect={handleSongSelect} />
     </div>
   );
 };

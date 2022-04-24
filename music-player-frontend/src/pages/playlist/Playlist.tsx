@@ -73,7 +73,11 @@ const Playlist = () => {
         onClose={() => setSongSelectionOpened(false)}
       />
 
-      <Player playlist={playlist || []} currentSong={currentSong} />
+      <Player
+        playlist={playlist || []}
+        currentSong={currentSong}
+        setCurrentSong={setCurrentSong}
+      />
     </div>
   );
 };
