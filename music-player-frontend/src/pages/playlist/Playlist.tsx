@@ -32,7 +32,7 @@ const Playlist = () => {
   };
 
   return (
-    <div className="page">
+    <div className="page" style={{ overflow: "auto" }}>
       <div className="page-header">
         <h1>Your Playlist</h1>
         <Button
@@ -58,7 +58,7 @@ const Playlist = () => {
             />
           </div>
         ) : (
-          <>
+          <div className={`playlist ${currentSong ? "active" : ""}`}>
             {playlist.map((song) => (
               <PlaylistEntry
                 song={song}
@@ -70,7 +70,7 @@ const Playlist = () => {
               text="Add a song"
               onClick={() => setSongSelectionOpened(true)}
             />
-          </>
+          </div>
         )}
       </div>
 
