@@ -4,6 +4,7 @@ import { IoPause, IoPlay } from "react-icons/io5";
 import { BACKEND_URL } from "../../api/auth";
 import { Song } from "../../api/songs";
 import { getImageCover } from "../../utils/songs";
+import { usePrevious } from "../../utils/usePrevious";
 import "./player.scss";
 import PlayerContent from "./PlayerContent";
 import Queue from "./Queue";
@@ -39,14 +40,27 @@ const Player: React.FC<PlayerProps> = ({
     return [...after, ...before];
   };
 
+  const prevValues = usePrevious({ currentSong, shuffle, playlist });
+
   useEffect(() => {
+    if (prevValues?.shuffle !== shuffle) return;
+    setQueue(playlist);
+  }, [playlist, shuffle]);
+
+  useEffect(() => {
+    if (currentSong === prevValues?.currentSong) return console.log("Returned");
     if (!currentSong || !audio.current) return;
     audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
     audio.current.play();
     setCurrentTime(0);
     setPaused(false);
-    setQueue(processPlaylist(playlist));
-  }, [currentSong]);
+
+    if (shuffle) {
+      setQueue(processPlaylist([...queue, prevValues!.currentSong!]));
+    } else {
+      setQueue(processPlaylist(playlist));
+    }
+  }, [currentSong, shuffle, playlist, queue]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -96,9 +110,15 @@ const Player: React.FC<PlayerProps> = ({
 
   // When shuffle is changed, we need to update the queue
   useEffect(() => {
+    if (currentSong !== prevValues?.currentSong) return;
     if (!shuffle) setQueue(processPlaylist(playlist));
-    else setQueue([...playlist].sort(() => Math.random() - 0.5));
-  }, [shuffle]);
+    else
+      setQueue(
+        [...playlist]
+          .sort(() => Math.random() - 0.5)
+          .filter((e) => e !== currentSong)
+      );
+  }, [shuffle, currentSong]);
 
   if (!currentSong)
     return (
