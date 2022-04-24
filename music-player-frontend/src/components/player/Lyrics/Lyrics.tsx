@@ -75,7 +75,7 @@ const Lyrics: React.FC<LyricsProps> = ({
     return () => {
       audio.current?.removeEventListener("timeupdate", onTimeChange);
     };
-  }, [lyrics]);
+  }, [lyrics, deviceId, socket]);
 
   useEffect(() => {
     if (deviceId === socket?.id) return;
