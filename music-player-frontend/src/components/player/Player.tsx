@@ -34,6 +34,7 @@ const Player: React.FC<PlayerProps> = ({
   const [queue, setQueue] = React.useState(playlist);
 
   const audio = React.useRef<HTMLAudioElement>(null);
+  const [queueOpened, setQueueOpened] = React.useState(true);
 
   // Next song function
   const nextSong = () => {
@@ -246,7 +247,27 @@ const Player: React.FC<PlayerProps> = ({
             previousSong={previousSong}
           />
         )}
-        <Queue queue={queue} onSelect={handleChangeSong} />
+        <div className={`player-slider ${queueOpened ? "" : "switched"}`}>
+          <div className="player-slider-item">
+            <Queue queue={queue} onSelect={handleChangeSong} />
+          </div>
+
+          <div className="player-slider-item">Som noice lyrikz</div>
+        </div>
+        <div className="player-buttons">
+          <button
+            onClick={() => setQueueOpened(true)}
+            className={queueOpened ? "active" : ""}
+          >
+            Queue
+          </button>
+          <button
+            onClick={() => setQueueOpened(false)}
+            className={queueOpened ? "" : "active"}
+          >
+            Lyrics
+          </button>
+        </div>
       </div>
     </div>
   );
