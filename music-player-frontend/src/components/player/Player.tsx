@@ -225,12 +225,13 @@ const Player: React.FC<PlayerProps> = ({
   // When paused state is changed, update audio
   useEffect(() => {
     if (!audio.current) return;
+    if (deviceId !== socket?.id) return;
     if (paused) {
       audio.current.pause();
     } else {
       audio.current.play();
     }
-  }, [paused]);
+  }, [paused, deviceId, socket]);
 
   // When song is changed, update background image with nice transition
   useEffect(() => {
