@@ -35,6 +35,16 @@ const Player: React.FC<PlayerProps> = ({
 
   const audio = React.useRef<HTMLAudioElement>(null);
 
+  // Next song function
+  const nextSong = () => {
+    console.log("next song");
+    if (queue.length) {
+      const nextSong = queue[0];
+      console.log("Next song:", nextSong);
+      handleChangeSong(nextSong);
+    }
+  };
+
   // Process playlist, remove current song from queue
   const processPlaylist = (playlist: Song[]) => {
     const before = playlist.slice(0, playlist.indexOf(currentSong!));
@@ -78,9 +88,12 @@ const Player: React.FC<PlayerProps> = ({
   // On song end
   const handleEnd = () => {
     if (!audio.current) return;
+    console.log("Song ended, next song");
     if (repeat) {
       audio.current.currentTime = 0;
       audio.current.play();
+    } else {
+      nextSong();
     }
   };
 
@@ -89,7 +102,7 @@ const Player: React.FC<PlayerProps> = ({
     audio.current?.addEventListener("ended", handleEnd);
 
     return () => audio.current?.removeEventListener("ended", handleEnd);
-  }, [audio, repeat]);
+  }, [audio, repeat, queue]);
 
   // When paused state is changed, update audio
   useEffect(() => {
@@ -218,6 +231,7 @@ const Player: React.FC<PlayerProps> = ({
             setShuffle={setShuffle}
             volume={volume}
             setVolume={setVolume}
+            nextSong={nextSong}
           />
         )}
         <Queue queue={queue} onSelect={handleChangeSong} />

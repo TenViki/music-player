@@ -29,6 +29,7 @@ interface PlayerContentProps {
   setShuffle: (shuffle: boolean) => void;
   volume: number;
   setVolume: (volume: number) => void;
+  nextSong: () => void;
 }
 
 const PlayerContent: React.FC<PlayerContentProps> = ({
@@ -46,6 +47,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
   setShuffle,
   volume,
   setVolume,
+  nextSong,
 }) => {
   return (
     <div className="player-song">
@@ -121,7 +123,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         >
           {paused ? <IoPlay /> : <IoPause />}
         </div>
-        <div className="player-controls-icon">
+        <div className="player-controls-icon" onClick={nextSong}>
           <FiChevronRight />
         </div>
         <div
