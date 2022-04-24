@@ -76,6 +76,18 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
     });
   };
 
+  const updatePaused = (paused: boolean) => {
+    setPaused(paused);
+    if (!socket) return;
+
+    console.log("Emitting pause");
+    socket.emit("set-status", {
+      status: {
+        paused,
+      },
+    });
+  };
+
   return (
     <div className="player-song">
       <div className="player-cover">
@@ -146,7 +158,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         </div>
         <div
           className="player-controls-icon main"
-          onClick={() => setPaused(!paused)}
+          onClick={() => updatePaused(!paused)}
         >
           {paused ? <IoPlay /> : <IoPause />}
         </div>

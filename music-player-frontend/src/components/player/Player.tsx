@@ -57,10 +57,12 @@ const Player: React.FC<PlayerProps> = ({
     song: string;
     shuffle: boolean;
     repeat: boolean;
+    paused: boolean;
   }) => {
     setDeviceId(status.device);
     setShuffle(status.shuffle);
     setRepeat(status.repeat);
+    setPaused(status.paused);
 
     console.log("status update", status);
 
@@ -244,6 +246,18 @@ const Player: React.FC<PlayerProps> = ({
     audio.current.volume = volume;
   }, [volume]);
 
+  const updatePaused = (paused: boolean) => {
+    setPaused(paused);
+    if (!socket) return;
+
+    console.log("Emitting pause");
+    socket.emit("set-status", {
+      status: {
+        paused,
+      },
+    });
+  };
+
   // When shuffle is changed, we need to update the queue
   useEffect(() => {
     if (currentSong !== prevValues?.currentSong) return;
@@ -298,7 +312,7 @@ const Player: React.FC<PlayerProps> = ({
             <div className="player-header-info">{currentSong?.title}</div>
             <div
               className="player-header-controls"
-              onClick={() => setPaused(!paused)}
+              onClick={() => updatePaused(!paused)}
             >
               {paused ? <IoPlay /> : <IoPause />}
             </div>

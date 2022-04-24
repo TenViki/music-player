@@ -29,6 +29,7 @@ interface Status {
   song: string;
   shuffle: boolean;
   repeat: boolean;
+  paused: boolean;
 }
 
 @WebSocketGateway({ cors: "*" })
@@ -88,6 +89,7 @@ export class SongsGateway implements OnGatewayDisconnect {
         song: "",
         shuffle: false,
         repeat: false,
+        paused: false,
       });
 
     return {
