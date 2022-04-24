@@ -12,6 +12,9 @@ export interface Song {
   size: number;
   lossless: boolean;
   file: string;
+  channels: number;
+  format: string;
+  lyrics: boolean;
 }
 
 export interface SearchResult {

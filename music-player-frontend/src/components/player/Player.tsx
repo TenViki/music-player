@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { FiChevronDown } from "react-icons/fi";
+import { FiCast, FiChevronDown, FiList } from "react-icons/fi";
 import { IoPause, IoPlay } from "react-icons/io5";
 import { BACKEND_URL } from "../../api/auth";
 import { Song } from "../../api/songs";
 import { getImageCover } from "../../utils/songs";
 import { usePrevious } from "../../utils/usePrevious";
 import Lyrics from "./Lyrics/Lyrics";
+import SongInsights from "./Menus/SongInsights";
 import "./player.scss";
 import PlayerContent from "./PlayerContent";
 import Queue from "./Queue";
@@ -31,6 +32,9 @@ const Player: React.FC<PlayerProps> = ({
   const [inTransition, setInTransition] = React.useState(false);
   const [shuffle, setShuffle] = React.useState(false);
   const [volume, setVolume] = React.useState(1);
+
+  const [insightsOpened, setInsightsOpened] = React.useState(false);
+  const [castOpened, setCastOpened] = React.useState(false);
 
   const [queue, setQueue] = React.useState(playlist);
 
@@ -218,6 +222,18 @@ const Player: React.FC<PlayerProps> = ({
           </div>
         </div>
 
+        <div className="playlist-header-icons">
+          <div className="playlist-header-icon">
+            <FiCast />
+          </div>
+          <div
+            className="playlist-header-icon"
+            onClick={() => setInsightsOpened(true)}
+          >
+            <FiList />
+          </div>
+        </div>
+
         <div
           className="playlist-header-toggle"
           onClick={() => setCollapsed(!collapsed)}
@@ -272,6 +288,12 @@ const Player: React.FC<PlayerProps> = ({
           </button>
         </div>
       </div>
+
+      <SongInsights
+        currentSong={currentSong}
+        opened={insightsOpened}
+        onClose={() => setInsightsOpened(false)}
+      />
     </div>
   );
 };

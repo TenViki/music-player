@@ -1,0 +1,35 @@
+.song-insights {
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    .info-grid-item {
+      display: flex;
+      align-items: center;
+    }
+
+    .info-grid-item-icon {
+      margin-right: 1rem;
+      width: 1.4rem;
+      height: 3rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 1.4rem;
+        height: 1.4rem;
+      }
+    }
+
+    .info-grid-item-label {
+      color: #666;
+      font-size: 0.8rem;
+    }
+  }
+}

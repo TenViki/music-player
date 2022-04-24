@@ -70,3 +70,8 @@ h1 {
   padding-top: max(8px, env(safe-area-inset-top));
   transform: translateX(1rem);
 }
+
+.title-small {
+  font-weight: 100;
+  margin-bottom: 1rem;
+}

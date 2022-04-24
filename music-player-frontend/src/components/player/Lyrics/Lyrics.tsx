@@ -65,7 +65,7 @@ const Lyrics: React.FC<LyricsProps> = ({ currentSong, audio }) => {
     });
 
     return () => {
-      audio.current!.removeEventListener("timeupdate", onTimeChange);
+      audio.current?.removeEventListener("timeupdate", onTimeChange);
     };
   }, [audio, lyrics]);
 
