@@ -73,12 +73,14 @@ function App() {
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
-      <div className="app">
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/playlist" element={<Playlist />} />
-        </Routes>
-      </div>
+      <SocketContext.Provider value={socket}>
+        <div className="app">
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/playlist" element={<Playlist />} />
+          </Routes>
+        </div>
+      </SocketContext.Provider>
     </UserContext.Provider>
   );
 }
