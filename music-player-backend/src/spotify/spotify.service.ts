@@ -83,11 +83,6 @@ export class SpotifyService implements OnApplicationBootstrap {
       },
     });
 
-    console.log(
-      response.data.message.body.macro_calls["track.subtitles.get"].message
-        .body,
-    );
-
     if (
       response.data.message.body.macro_calls["track.subtitles.get"].message
         .header.status_code !== 200 ||
