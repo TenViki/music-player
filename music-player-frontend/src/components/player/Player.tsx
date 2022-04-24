@@ -5,6 +5,7 @@ import { BACKEND_URL } from "../../api/auth";
 import { Song } from "../../api/songs";
 import { getImageCover } from "../../utils/songs";
 import { usePrevious } from "../../utils/usePrevious";
+import Lyrics from "./Lyrics/Lyrics";
 import "./player.scss";
 import PlayerContent from "./PlayerContent";
 import Queue from "./Queue";
@@ -252,7 +253,9 @@ const Player: React.FC<PlayerProps> = ({
             <Queue queue={queue} onSelect={handleChangeSong} />
           </div>
 
-          <div className="player-slider-item">Som noice lyrikz</div>
+          <div className="player-slider-item">
+            <Lyrics currentSong={currentSong} audio={audio} />
+          </div>
         </div>
         <div className="player-buttons">
           <button

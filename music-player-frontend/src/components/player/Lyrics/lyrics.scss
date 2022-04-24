@@ -1,0 +1,23 @@
+.lyrics-laoding {
+  font-size: 1rem;
+  color: #fff;
+  text-align: center;
+  padding: 1em;
+}
+
+.player-lyrics {
+  padding: 1rem;
+  overflow: hidden;
+  text-align: center;
+  font-size: 1.2rem;
+
+  .lyrics-line {
+    opacity: 0.5;
+    transition: 0.2s;
+
+    &.active {
+      opacity: 1;
+      font-size: 1.5rem;
+    }
+  }
+}

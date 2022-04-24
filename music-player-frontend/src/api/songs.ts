@@ -26,6 +26,16 @@ export interface SearchResult {
   artists: string[];
 }
 
+export interface Lyrics {
+  text: string;
+  time: {
+    total: number;
+    minutes: number;
+    seconds: number;
+    hundredths: number;
+  };
+}
+
 export const getPlaylist = async (): Promise<Song[]> => {
   const data = await api.get<Song[]>("/songs", {
     headers: {
@@ -57,5 +67,14 @@ export const addSong = async (songId: string): Promise<Song> => {
       timeout: 30000,
     }
   );
+  return data.data;
+};
+
+export const getLyrics = async (songId: string) => {
+  const data = await api.get<Lyrics[] | null>(`/songs/lyrics/${songId}`, {
+    headers: {
+      Authorization: TokenManager.token,
+    },
+  });
   return data.data;
 };
