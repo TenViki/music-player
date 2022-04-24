@@ -60,10 +60,12 @@ export class SongsService {
       lyrics: songLyrics,
     });
 
-    this.songsGateway.send("playlist-add", song, user.id);
+    const savedSong = await this.repo.save(song);
+
+    this.songsGateway.send("playlist-add", savedSong, user.id);
 
     // Save song to database
-    return this.repo.save(song);
+    return savedSong;
   }
 
   async search(query: string) {
