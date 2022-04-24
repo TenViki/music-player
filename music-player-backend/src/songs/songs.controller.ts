@@ -70,4 +70,8 @@ export class SongsController {
   async search(@Param("q") q: string) {
     return await this.songsService.search(q);
   }
+  @Get("/lyrics/:id")
+  async getLyrics(@Param("id") id: string) {
+    return await this.songsService.getLyrics(id);
+  }
 }

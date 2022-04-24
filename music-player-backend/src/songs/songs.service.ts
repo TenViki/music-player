@@ -66,4 +66,10 @@ export class SongsService {
     const a = await this.spotifyService.search(query);
     return a.tracks.items;
   }
+
+  async getLyrics(id: string) {
+    const lyrics = await this.repo.findOne({ where: { id } });
+    if (!lyrics) return null;
+    return JSON.parse(lyrics.lyrics);
+  }
 }
