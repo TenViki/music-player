@@ -7,6 +7,8 @@ import "./device-cast.scss";
 interface DeviceCastProps {
   opened: boolean;
   onClose: () => void;
+  devices: DeviceType[];
+  setDevices: (devices: DeviceType[]) => void;
 }
 
 export interface DeviceType {
@@ -15,9 +17,13 @@ export interface DeviceType {
   name: string;
 }
 
-const DeviceCast: React.FC<DeviceCastProps> = ({ opened, onClose }) => {
+const DeviceCast: React.FC<DeviceCastProps> = ({
+  opened,
+  onClose,
+  devices,
+  setDevices,
+}) => {
   const socket = React.useContext(SocketContext);
-  const [devices, setDevices] = React.useState<DeviceType[]>([]);
 
   useEffect(() => {
     if (!socket) return;

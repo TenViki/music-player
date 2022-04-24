@@ -7,7 +7,7 @@ import { SocketContext } from "../../App";
 import { getImageCover } from "../../utils/songs";
 import { usePrevious } from "../../utils/usePrevious";
 import Lyrics from "./Lyrics/Lyrics";
-import DeviceCast from "./Menus/DeviceCast";
+import DeviceCast, { DeviceType } from "./Menus/DeviceCast";
 import SongInsights from "./Menus/SongInsights";
 import "./player.scss";
 import PlayerContent from "./PlayerContent";
@@ -47,6 +47,7 @@ const Player: React.FC<PlayerProps> = ({
 
   const audio = React.useRef<HTMLAudioElement>(null);
   const [queueOpened, setQueueOpened] = React.useState(true);
+  const [devices, setDevices] = React.useState<DeviceType[]>([]);
 
   const handleStatusUpdate = (status: {
     device: string;
@@ -61,6 +62,7 @@ const Player: React.FC<PlayerProps> = ({
 
     if (status.song && status.song !== currentSong?.id) {
       const song = playlist.find((song) => song.id === status.song);
+      console.log("Song updated", song, status.song);
       song && handleChangeSong(song);
     }
 
@@ -70,11 +72,12 @@ const Player: React.FC<PlayerProps> = ({
   useEffect(() => {
     if (!socket) return;
     socket.on("status-update", handleStatusUpdate);
+    socket.emit("get-status");
 
     return () => {
       socket.off("status-update", handleStatusUpdate);
     };
-  }, [socket]);
+  }, [socket, playlist]);
 
   // Next song function
   const nextSong = () => {
@@ -116,7 +119,12 @@ const Player: React.FC<PlayerProps> = ({
   useEffect(() => {
     if (currentSong === prevValues?.currentSong) return;
 
-    const device = deviceId ? deviceId : socket?.id;
+    const device =
+      deviceId && devices.find((d) => d.id === deviceId)
+        ? deviceId
+        : socket?.id;
+    console.log("Device", device, devices, socket?.id);
+    console.log(device);
     socket?.emit("set-status", {
       status: { song: currentSong?.id, device },
     });
@@ -224,6 +232,7 @@ const Player: React.FC<PlayerProps> = ({
       }`}
     >
       <audio ref={audio} />
+      {socket?.id}
       <div
         className={`player-background-transition ${
           inTransition ? "transitioning" : ""
@@ -341,7 +350,12 @@ const Player: React.FC<PlayerProps> = ({
         onClose={() => setInsightsOpened(false)}
       />
 
-      <DeviceCast onClose={() => setCastOpened(false)} opened={castOpened} />
+      <DeviceCast
+        onClose={() => setCastOpened(false)}
+        opened={castOpened}
+        devices={devices}
+        setDevices={setDevices}
+      />
     </div>
   );
 };

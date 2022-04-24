@@ -44,6 +44,7 @@ const Playlist = () => {
       prev?.currentSong?.id,
       available
     );
+    console.log(available, next?.title, currentSong?.title);
     if (
       !available ||
       currentSong !== prev?.currentSong ||

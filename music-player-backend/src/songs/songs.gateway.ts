@@ -74,13 +74,16 @@ export class SongsGateway implements OnGatewayDisconnect {
       return wsError("Invalid token");
     }
 
-    this.userTimes.set(userId, 0);
-
     const user = await this.userRepo.findOne({ where: { id: userId } });
     this.clients.set(client.id, user);
     client.join(user.id);
 
-    if (!this.userDevices.has(user.id))
+    if (!this.userTimes.has(user.id)) {
+      this.userTimes.set(user.id, 0);
+    }
+    this.userTimes.set(userId, 0);
+
+    if (!this.userStatuses.has(user.id))
       this.userStatuses.set(user.id, {
         device: "",
         song: "",
