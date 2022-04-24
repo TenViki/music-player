@@ -16,6 +16,13 @@
     black calc(100% - 5rem),
     transparent
   );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black calc(2rem),
+    black calc(100% - 5rem),
+    transparent
+  );
 
   .lyrics-line {
     opacity: 0.5;
