@@ -35,6 +35,7 @@ const Player: React.FC<PlayerProps> = ({
 
   const audio = React.useRef<HTMLAudioElement>(null);
 
+  // Process playlist, remove current song from queue
   const processPlaylist = (playlist: Song[]) => {
     const before = playlist.slice(0, playlist.indexOf(currentSong!));
     const after = playlist.slice(playlist.indexOf(currentSong!) + 1);
@@ -43,11 +44,13 @@ const Player: React.FC<PlayerProps> = ({
 
   const prevValues = usePrevious({ currentSong, shuffle, playlist });
 
+  // When playlist is changed, update queue
   useEffect(() => {
     if (prevValues?.shuffle !== shuffle) return;
     setQueue(playlist);
   }, [playlist, shuffle]);
 
+  // When current song is changed, make it src of audio and all this kind of stuff
   useEffect(() => {
     if (currentSong === prevValues?.currentSong) return;
     if (!currentSong || !audio.current) return;
@@ -63,6 +66,7 @@ const Player: React.FC<PlayerProps> = ({
     }
   }, [currentSong, shuffle, playlist, queue]);
 
+  // Every second update current time
   useEffect(() => {
     const interval = setInterval(() => {
       !tapped && setCurrentTime(audio.current?.currentTime || 0);
@@ -71,6 +75,7 @@ const Player: React.FC<PlayerProps> = ({
     return () => clearInterval(interval);
   }, [currentSong, tapped, audio]);
 
+  // On song end
   const handleEnd = () => {
     if (!audio.current) return;
     if (repeat) {
@@ -79,12 +84,14 @@ const Player: React.FC<PlayerProps> = ({
     }
   };
 
+  // Adds even listeners to audio
   useEffect(() => {
     audio.current?.addEventListener("ended", handleEnd);
 
     return () => audio.current?.removeEventListener("ended", handleEnd);
   }, [audio, repeat]);
 
+  // When paused state is changed, update audio
   useEffect(() => {
     if (!audio.current) return;
     if (paused) {
@@ -94,6 +101,7 @@ const Player: React.FC<PlayerProps> = ({
     }
   }, [paused]);
 
+  // When song is changed, update background image with nice transition
   useEffect(() => {
     setInTransition(true);
     setTimeout(() => {
@@ -101,7 +109,7 @@ const Player: React.FC<PlayerProps> = ({
     }, 550);
   }, [lastSong]);
 
-  const handleProgressDown = () => {
+  const handleProgressUp = () => {
     if (!audio.current) return;
     setTapped(false);
     audio.current.currentTime = currentTime;
@@ -109,6 +117,7 @@ const Player: React.FC<PlayerProps> = ({
     setPaused(false);
   };
 
+  // When volume is changed, update audio
   useEffect(() => {
     if (!audio.current) return;
     audio.current.volume = volume;
@@ -197,7 +206,7 @@ const Player: React.FC<PlayerProps> = ({
             audio={audio.current!}
             currentSong={currentSong}
             currentTime={currentTime}
-            handleProgressDown={handleProgressDown}
+            handleProgressDown={handleProgressUp}
             paused={paused}
             repeat={repeat}
             setRepeat={setRepeat}
