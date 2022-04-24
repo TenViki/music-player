@@ -29,6 +29,7 @@ const Player: React.FC<PlayerProps> = ({
   const [repeat, setRepeat] = React.useState(false);
   const [inTransition, setInTransition] = React.useState(false);
   const [shuffle, setShuffle] = React.useState(false);
+  const [volume, setVolume] = React.useState(1);
 
   const [queue, setQueue] = React.useState(playlist);
 
@@ -108,6 +109,11 @@ const Player: React.FC<PlayerProps> = ({
     setPaused(false);
   };
 
+  useEffect(() => {
+    if (!audio.current) return;
+    audio.current.volume = volume;
+  }, [volume]);
+
   // When shuffle is changed, we need to update the queue
   useEffect(() => {
     if (currentSong !== prevValues?.currentSong) return;
@@ -148,7 +154,7 @@ const Player: React.FC<PlayerProps> = ({
           <img
             className="player-background-image"
             src={currentSong.cover}
-            alt=""
+            alt={currentSong.title}
           />
         )}
       </div>
@@ -201,6 +207,8 @@ const Player: React.FC<PlayerProps> = ({
             tapped={tapped}
             shuffle={shuffle}
             setShuffle={setShuffle}
+            volume={volume}
+            setVolume={setVolume}
           />
         )}
         <Queue queue={queue} onSelect={handleChangeSong} />

@@ -4,6 +4,10 @@ import {
   FiChevronRight,
   FiRepeat,
   FiShuffle,
+  FiVolume,
+  FiVolume1,
+  FiVolume2,
+  FiVolumeX,
 } from "react-icons/fi";
 import { IoPause, IoPlay } from "react-icons/io5";
 import { Song } from "../../api/songs";
@@ -23,6 +27,8 @@ interface PlayerContentProps {
   audio: HTMLAudioElement;
   shuffle: boolean;
   setShuffle: (shuffle: boolean) => void;
+  volume: number;
+  setVolume: (volume: number) => void;
 }
 
 const PlayerContent: React.FC<PlayerContentProps> = ({
@@ -38,6 +44,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
   audio,
   shuffle,
   setShuffle,
+  volume,
+  setVolume,
 }) => {
   return (
     <div className="player-song">
@@ -47,6 +55,30 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
       <div className="player-info">
         <div className="player-title">{currentSong?.title}</div>
         <div className="player-artist">{currentSong?.artist}</div>
+      </div>
+
+      <div className="player-volume">
+        <input
+          type="range"
+          className="player-volume-bar"
+          style={{
+            backgroundSize: `${volume * 100}% 100%`,
+          }}
+          value={volume}
+          onChange={(e) => {
+            setVolume(parseFloat(e.target.value));
+          }}
+          min={0}
+          max={1}
+          step={0.01}
+        />
+
+        <div className="player-volume-icon">
+          {volume === 0 && <FiVolumeX />}
+          {volume > 0 && volume <= 0.33 && <FiVolume />}
+          {volume > 0.33 && volume <= 0.66 && <FiVolume1 />}
+          {volume > 0.66 && volume <= 1 && <FiVolume2 />}
+        </div>
       </div>
 
       <div className="player-progress">
