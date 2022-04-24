@@ -10,12 +10,14 @@ import { SpotifyService } from "src/spotify/spotify.service";
 import spdl from "spdl-core";
 import * as toArray from "stream-to-array";
 import axios from "axios";
+import { SongsGateway } from "./songs.gateway";
 
 @Injectable()
 export class SongsService {
   constructor(
     @InjectRepository(Song) private repo: Repository<Song>,
     private spotifyService: SpotifyService,
+    private songsGateway: SongsGateway,
   ) {}
 
   getAll(user: User) {
@@ -57,6 +59,8 @@ export class SongsService {
       format: metadata.format.container,
       lyrics: songLyrics,
     });
+
+    this.songsGateway.send("playlist-add", song, user.id);
 
     // Save song to database
     return this.repo.save(song);

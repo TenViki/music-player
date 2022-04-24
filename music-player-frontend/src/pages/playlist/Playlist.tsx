@@ -16,9 +16,11 @@ import "./playlist.scss";
 
 const Playlist = () => {
   const { setUser, user } = React.useContext(UserContext);
-  const { data: playlist } = useQuery(["playlist", user?.id], getPlaylist, {
+  const [playlist, setPlaylist] = React.useState<Song[]>([]);
+  useQuery(["playlist", user?.id], getPlaylist, {
     enabled: !!user,
     initialData: [],
+    onSuccess: setPlaylist,
   });
   const navigate = useNavigate();
   const [devices, setDevices] = React.useState<DeviceType[]>([]);
@@ -39,13 +41,19 @@ const Playlist = () => {
 
   const prev = usePrevious({ currentSong });
 
+  const handleplaylistAdd = (song: Song) => {
+    setPlaylist((prev) => [...prev, song]);
+  };
+
   useEffect(() => {
     if (!socket) return;
     socket.on("device-update", setDevices);
+    socket.on("playlist-add", handleplaylistAdd);
     socket.emit("get-devices");
 
     return () => {
       socket.off("device-update", setDevices);
+      socket.off("playlist-add", handleplaylistAdd);
     };
   }, [socket]);
 
