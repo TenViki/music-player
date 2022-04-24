@@ -97,11 +97,8 @@ export class SongsGateway implements OnGatewayDisconnect {
       type: deviceType,
     } as DeviceType;
 
-    console.log("new device!", device);
-
     if (!this.userDevices.has(user.id)) {
       this.userDevices.set(user.id, []);
-      console.log("new user!");
     }
 
     const devices = this.userDevices.get(user.id);
