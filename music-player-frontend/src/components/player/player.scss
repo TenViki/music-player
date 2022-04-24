@@ -226,10 +226,11 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+  margin-top: 1rem;
 
   .player-cover {
-    width: 10rem;
-    height: 10rem;
+    width: 13rem;
+    height: 13rem;
     overflow: hidden;
     border-radius: 2rem;
     margin-bottom: 2rem;
@@ -244,7 +245,7 @@
   .player-volume {
     position: absolute;
     right: 1.7rem;
-    top: 4rem;
+    top: 5.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
