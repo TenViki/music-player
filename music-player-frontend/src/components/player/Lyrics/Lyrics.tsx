@@ -40,7 +40,7 @@ const Lyrics: React.FC<LyricsProps> = ({ currentSong, audio }) => {
       const nextLyric = lyrics[+i + 1];
       if (
         lyric.time.total <= currentTime &&
-        nextLyric.time.total > currentTime
+        (nextLyric?.time?.total || currentSong?.duration || 0) > currentTime
       ) {
         return +i;
       }
