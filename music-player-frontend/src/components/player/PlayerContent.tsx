@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { IoPause, IoPlay } from "react-icons/io5";
 import { Song } from "../../api/songs";
+import { SocketContext } from "../../App";
 import { formatTime, getImageCover } from "../../utils/songs";
 
 interface PlayerContentProps {
@@ -51,6 +52,30 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
   nextSong,
   previousSong,
 }) => {
+  const socket = React.useContext(SocketContext);
+
+  const updateShuffle = (shuffle: boolean) => {
+    setShuffle(shuffle);
+    if (!socket) return;
+
+    socket.emit("set-status", {
+      status: {
+        shuffle,
+      },
+    });
+  };
+
+  const updateRepeat = (repeat: boolean) => {
+    setRepeat(repeat);
+    if (!socket) return;
+
+    socket.emit("set-status", {
+      status: {
+        repeat,
+      },
+    });
+  };
+
   return (
     <div className="player-song">
       <div className="player-cover">
@@ -112,7 +137,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
       <div className="player-controls">
         <div
           className={`player-controls-icon ${shuffle ? "active" : ""}`}
-          onClick={() => setShuffle(!shuffle)}
+          onClick={() => updateShuffle(!shuffle)}
         >
           <FiShuffle />
         </div>
@@ -130,7 +155,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         </div>
         <div
           className={`player-controls-icon ${repeat ? "active" : ""}`}
-          onClick={() => setRepeat(!repeat)}
+          onClick={() => updateRepeat(!repeat)}
         >
           <FiRepeat />
         </div>
