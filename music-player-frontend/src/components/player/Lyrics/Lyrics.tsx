@@ -5,7 +5,7 @@ interface LyricsProps {
   currentSong?: Song;
 }
 
-const Lyrics: React.FC<LyricsProps> = () => {
+const Lyrics: React.FC<LyricsProps> = ({ currentSong }) => {
   return <div>Poggers</div>;
 };
 
