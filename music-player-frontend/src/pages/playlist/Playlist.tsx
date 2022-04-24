@@ -63,7 +63,7 @@ const Playlist = () => {
               <PlaylistEntry
                 song={song}
                 key={song.id}
-                onSelect={setCurrentSong}
+                onSelect={handleChangeSong}
               />
             ))}
             <Button
