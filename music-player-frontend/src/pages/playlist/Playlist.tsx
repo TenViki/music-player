@@ -3,10 +3,11 @@ import { useQuery } from "react-query";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { getPlaylist, Song } from "../../api/songs";
-import { UserContext } from "../../App";
+import { SocketContext, UserContext } from "../../App";
 import noData from "../../assets/no_data.svg";
 import Button from "../../components/button/Button";
 import SongSearch from "../../components/filepicker/SongSearch";
+import { DeviceType } from "../../components/player/Menus/DeviceCast";
 import Player from "../../components/player/Player";
 import PlaylistEntry from "../../components/playlist/PlaylistEntry";
 import { TokenManager } from "../../utils/tokenmanager";
@@ -20,6 +21,8 @@ const Playlist = () => {
     initialData: [],
   });
   const navigate = useNavigate();
+  const [devices, setDevices] = React.useState<DeviceType[]>([]);
+  const socket = React.useContext(SocketContext);
 
   const [songSelectionOpened, setSongSelectionOpened] = React.useState(false);
   const [currentSong, setCurrentSong] = React.useState<Song | undefined>(
@@ -35,6 +38,16 @@ const Playlist = () => {
   };
 
   const prev = usePrevious({ currentSong });
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("device-update", setDevices);
+    socket.emit("get-devices");
+
+    return () => {
+      socket.off("device-update", setDevices);
+    };
+  }, [socket]);
 
   useEffect(() => {
     console.info(
@@ -102,13 +115,17 @@ const Playlist = () => {
         onClose={() => setSongSelectionOpened(false)}
       />
 
-      <Player
-        playlist={playlist || []}
-        currentSong={currentSong}
-        handleChangeSong={handleChangeSong}
-        lastSong={lastSong}
-        setAvailable={setAvailable}
-      />
+      {devices.length && (
+        <Player
+          playlist={playlist || []}
+          currentSong={currentSong}
+          handleChangeSong={handleChangeSong}
+          lastSong={lastSong}
+          setAvailable={setAvailable}
+          devices={devices}
+          setDevices={setDevices}
+        />
+      )}
     </div>
   );
 };

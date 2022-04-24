@@ -19,6 +19,8 @@ interface PlayerProps {
   playlist: Song[];
   handleChangeSong: (song: Song) => void;
   setAvailable: (available: boolean) => void;
+  devices: DeviceType[];
+  setDevices: (devices: DeviceType[]) => void;
 }
 
 const Player: React.FC<PlayerProps> = ({
@@ -27,6 +29,8 @@ const Player: React.FC<PlayerProps> = ({
   handleChangeSong,
   lastSong,
   setAvailable,
+  devices,
+  setDevices,
 }) => {
   const socket = React.useContext(SocketContext);
   const [collapsed, setCollapsed] = React.useState(true);
@@ -47,7 +51,6 @@ const Player: React.FC<PlayerProps> = ({
 
   const audio = React.useRef<HTMLAudioElement>(null);
   const [queueOpened, setQueueOpened] = React.useState(true);
-  const [devices, setDevices] = React.useState<DeviceType[]>([]);
 
   const handleStatusUpdate = (status: {
     device: string;
@@ -58,6 +61,8 @@ const Player: React.FC<PlayerProps> = ({
     setDeviceId(status.device);
     setShuffle(status.shuffle);
     setRepeat(status.repeat);
+
+    console.log("status update", status);
 
     if (status.song && status.song !== currentSong?.id) {
       const song = playlist.find((song) => song.id === status.song);

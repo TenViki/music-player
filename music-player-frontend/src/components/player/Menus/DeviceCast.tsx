@@ -25,26 +25,6 @@ const DeviceCast: React.FC<DeviceCastProps> = ({
 }) => {
   const socket = React.useContext(SocketContext);
 
-  useEffect(() => {
-    if (!socket) return;
-
-    socket.emit("get-devices");
-  }, []);
-
-  const handleDeviceUpdate = (devices: DeviceType[]) => {
-    console.log("Device update: ", devices);
-    setDevices(devices);
-  };
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("device-update", handleDeviceUpdate);
-
-    return () => {
-      socket.off("device-update", handleDeviceUpdate);
-    };
-  }, [socket]);
-
   return (
     <SwipeCard
       opened={opened}
