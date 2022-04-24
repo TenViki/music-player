@@ -33,8 +33,6 @@ export class SongsGateway implements OnGatewayDisconnect {
   constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
 
   handleDisconnect(client: Socket) {
-    this.clients.delete(client.id);
-
     // Remove device
     const user = this.clients.get(client.id);
     if (!user) return;
@@ -44,6 +42,8 @@ export class SongsGateway implements OnGatewayDisconnect {
     if (!device) return;
     devices.splice(devices.indexOf(device), 1);
     this.send("device-disconnect", device, user.id);
+
+    this.clients.delete(client.id);
   }
 
   @SubscribeMessage("auth")
