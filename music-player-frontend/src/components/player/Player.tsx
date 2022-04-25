@@ -21,6 +21,7 @@ interface PlayerProps {
   setAvailable: (available: boolean) => void;
   devices: DeviceType[];
   setDevices: (devices: DeviceType[]) => void;
+  available: boolean;
 }
 
 const Player: React.FC<PlayerProps> = ({
@@ -31,6 +32,7 @@ const Player: React.FC<PlayerProps> = ({
   setAvailable,
   devices,
   setDevices,
+  available,
 }) => {
   const socket = React.useContext(SocketContext);
   const [collapsed, setCollapsed] = React.useState(true);
@@ -126,7 +128,7 @@ const Player: React.FC<PlayerProps> = ({
   const handlePause = () => {
     if (socket?.id !== deviceId) return;
     setPaused(true);
-    if (!socket) return;
+    if (!socket || !available) return;
 
     socket.emit("set-status", {
       status: {
@@ -136,7 +138,7 @@ const Player: React.FC<PlayerProps> = ({
   };
 
   const handlePlay = () => {
-    if (socket?.id !== deviceId) return;
+    if (socket?.id !== deviceId || !available) return;
     setPaused(false);
 
     if (!socket) return;
@@ -158,7 +160,7 @@ const Player: React.FC<PlayerProps> = ({
       audio.current?.removeEventListener("pause", handlePause);
       audio.current?.removeEventListener("play", handlePlay);
     };
-  }, [audio, deviceId, socket]);
+  }, [audio, deviceId, socket, available]);
 
   // Next song function
   const nextSong = () => {

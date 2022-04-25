@@ -149,6 +149,7 @@ const Playlist = () => {
           setAvailable={setAvailable}
           devices={devices}
           setDevices={setDevices}
+          available={available}
         />
       )}
     </div>
