@@ -63,11 +63,6 @@ const Player: React.FC<PlayerProps> = ({
   useEffect(() => {
     if (!currentSong) return;
 
-    navigator.mediaSession.setPositionState({
-      position: currentTime,
-      duration: currentSong.duration,
-    });
-
     navigator.mediaSession.metadata = new MediaMetadata({
       title: currentSong.title,
       artist: currentSong.artist,

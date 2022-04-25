@@ -9,6 +9,7 @@ interface SwipeCardProps {
   fullheight?: boolean;
   hiddenOverflow?: boolean;
   scrollContentRef?: React.RefObject<HTMLDivElement>;
+  background?: string;
 }
 
 const SwipeCard: React.FC<SwipeCardProps> = ({
@@ -19,6 +20,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
   fullheight,
   hiddenOverflow,
   scrollContentRef,
+  background,
 }) => {
   const [originY, setOriginY] = React.useState(0);
   const [currentY, setCurrentY] = React.useState(0);
@@ -96,6 +98,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
           {
             "--transformBy": Math.max(0, currentY - originY),
             overflow: hiddenOverflow ? "hidden" : "",
+            background: background,
           } as React.CSSProperties
         }
       >

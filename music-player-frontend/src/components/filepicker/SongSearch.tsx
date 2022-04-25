@@ -1,13 +1,11 @@
-import axios from "axios";
 import React, { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { addSong, SearchResult, searchSongs } from "../../api/songs";
-import { formatSize, getBase64 } from "../../utils/files";
-import Button from "../button/Button";
 import SwipeCard from "../swipecard/SwipeCard";
 import Textfield from "../textfield/Textfield";
 import "./song-search.scss";
 import SongSearchEntry from "./SongSearchEntry";
+import SearchBackground from "../../assets/search-background.jpg";
 
 interface FilePickerProps {
   opened: boolean;
