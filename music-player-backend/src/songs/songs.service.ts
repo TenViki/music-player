@@ -78,4 +78,12 @@ export class SongsService {
     if (!lyrics) return null;
     return JSON.parse(lyrics.lyrics);
   }
+
+  async deleteSong(id: string, user: User) {
+    const song = await this.repo.findOne({ where: { id, user } });
+    if (!song) return null;
+    await this.repo.delete(song.id);
+    this.songsGateway.send("playlist-remove", song, user.id);
+    return song;
+  }
 }

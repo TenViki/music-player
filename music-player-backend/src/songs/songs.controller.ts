@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -73,5 +74,11 @@ export class SongsController {
   @Get("/lyrics/:id")
   async getLyrics(@Param("id") id: string) {
     return await this.songsService.getLyrics(id);
+  }
+
+  @Delete("/:id")
+  @UseGuards(AuthGuard)
+  async deleteSong(@Param("id") id: string, @CurrentUser() user: User) {
+    return await this.songsService.deleteSong(id, user);
   }
 }
