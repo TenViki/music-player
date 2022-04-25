@@ -39,9 +39,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
     }
   };
 
-  const onTouchStart = (
-    e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
-  ) => {
+  const onTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
     e.preventDefault();
     if (cardRef.current?.scrollTop || scrollContentRef?.current?.scrollTop)
       return;
@@ -56,9 +54,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
     setDragging(true);
   };
 
-  const onTouchMove = (
-    e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
-  ) => {
+  const onTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
     if (!dragging) return;
 
     setCurrentY("touches" in e ? e.touches[0].clientY : e.clientY);

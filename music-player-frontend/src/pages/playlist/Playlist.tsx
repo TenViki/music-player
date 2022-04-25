@@ -10,6 +10,7 @@ import SongSearch from "../../components/filepicker/SongSearch";
 import { DeviceType } from "../../components/player/Menus/DeviceCast";
 import Player from "../../components/player/Player";
 import PlaylistEntry from "../../components/playlist/PlaylistEntry";
+import PlaylistEntryWrapper from "../../components/playlist/PlaylistEntryWrapper";
 import { TokenManager } from "../../utils/tokenmanager";
 import { usePrevious } from "../../utils/usePrevious";
 import "./playlist.scss";
@@ -25,6 +26,8 @@ const Playlist = () => {
   const navigate = useNavigate();
   const [devices, setDevices] = React.useState<DeviceType[]>([]);
   const socket = React.useContext(SocketContext);
+
+  const [dragging, setDragging] = React.useState(-1);
 
   const [songSelectionOpened, setSongSelectionOpened] = React.useState(false);
   const [currentSong, setCurrentSong] = React.useState<Song | undefined>(
@@ -77,7 +80,7 @@ const Playlist = () => {
   }, [next, available, currentSong, socket]);
 
   return (
-    <div className="page" style={{ overflow: "auto" }}>
+    <div className="page" style={{ overflowY: "auto" }}>
       <div className="page-header">
         <h1>Your Playlist</h1>
         <Button
@@ -104,12 +107,18 @@ const Playlist = () => {
           </div>
         ) : (
           <div className={`playlist ${currentSong ? "active" : ""}`}>
-            {playlist.map((song) => (
-              <PlaylistEntry
-                song={song}
-                key={song.id}
-                onSelect={handleChangeSong}
-              />
+            {playlist.map((song, i) => (
+              <PlaylistEntryWrapper
+                close={dragging}
+                setClosed={setDragging}
+                index={i}
+              >
+                <PlaylistEntry
+                  song={song}
+                  key={song.id}
+                  onSelect={handleChangeSong}
+                />
+              </PlaylistEntryWrapper>
             ))}
             <Button
               text="Add a song"

@@ -20,6 +20,7 @@ body,
 .app {
   -webkit-tap-highlight-color: transparent;
   height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -42,6 +43,8 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  overflow-x: hidden;
+  width: 100vw;
 
   .page-header {
     display: flex;

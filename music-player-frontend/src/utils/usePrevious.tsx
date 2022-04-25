@@ -7,3 +7,14 @@ export const usePrevious = <T extends unknown>(value: T): T | undefined => {
   });
   return ref.current;
 };
+
+export const doParentsHaveClass = (
+  element: HTMLElement,
+  className: string
+): boolean => {
+  if (element.classList.contains(className)) return true;
+  if (element.parentElement) {
+    return doParentsHaveClass(element.parentElement, className);
+  }
+  return false;
+};

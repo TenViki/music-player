@@ -1,0 +1,58 @@
+.playlist-entry-wrapper {
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+  position: relative;
+
+  .plalist-entry-delete {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    z-index: -1;
+    width: 4rem;
+    height: 100%;
+    background-color: #c0392b;
+    border-radius: 0.5rem;
+    opacity: 0;
+    transition: 0.5s all, 0.2s background-color;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: #fff;
+    }
+
+    &.dragging {
+      transition: 0s;
+    }
+
+    &.opened:not(.dragging) {
+      opacity: 1 !important;
+      z-index: 1;
+    }
+
+    &:active {
+      background-color: #85291f;
+    }
+  }
+
+  .playlist-entry-content {
+    width: 100%;
+    transition: 0.3s;
+
+    &.dragging {
+      transform: translateX(calc(var(--transformBy) * 1px));
+      transition: 0s;
+    }
+
+    &.opened {
+      margin-left: 5rem;
+      transition: 0s;
+    }
+  }
+}
