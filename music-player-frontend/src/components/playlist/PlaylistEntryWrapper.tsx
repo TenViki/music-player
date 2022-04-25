@@ -26,8 +26,6 @@ const PlaylistEntryWrapper: React.FC<PlaylistEntryWrapperProps> = ({
   }, [close]);
 
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
-    e.preventDefault();
-
     setOriginX("touches" in e ? e.touches[0].clientX : e.clientX);
     setCurrentX("touches" in e ? e.touches[0].clientX : e.clientX);
     setDraggingSelf(true);
@@ -35,14 +33,11 @@ const PlaylistEntryWrapper: React.FC<PlaylistEntryWrapperProps> = ({
 
   const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
     if (!draggingSelf) return;
-    e.preventDefault();
 
     setCurrentX("touches" in e ? e.touches[0].clientX : e.clientX);
   };
 
   const handleTouchEnd = (e: React.TouchEvent | React.MouseEvent) => {
-    e.preventDefault();
-
     if (!opened && currentX - originX > 64) {
       setClosed(index);
       setOpened(true);

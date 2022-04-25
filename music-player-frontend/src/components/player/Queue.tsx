@@ -9,7 +9,7 @@ interface QueueProps {
 
 const Queue: React.FC<QueueProps> = ({ queue, onSelect }) => {
   return (
-    <div className="player-queue">
+    <div className="player-queue clickable">
       {queue.map((song, index) => (
         <PlaylistEntry onSelect={onSelect} song={song} key={index} />
       ))}
