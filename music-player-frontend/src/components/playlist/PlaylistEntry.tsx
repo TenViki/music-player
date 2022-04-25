@@ -12,7 +12,6 @@ interface PlaylistEntryProps {
 
 const PlaylistEntry: React.FC<PlaylistEntryProps> = ({ song, onSelect }) => {
   const handleClick = (e: React.MouseEvent | React.TouchEvent) => {
-    console.log("click log");
     const target = e.target as HTMLElement;
     // if path to target contains class dragging, do nothing
 

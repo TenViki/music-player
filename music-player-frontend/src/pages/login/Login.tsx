@@ -76,7 +76,6 @@ const Login = () => {
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
         setSingupError(error?.response?.data.message);
-        console.log(error?.response?.data.message);
       } else {
         toast.error("Something went wrong");
       }

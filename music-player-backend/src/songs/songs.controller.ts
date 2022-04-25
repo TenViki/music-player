@@ -61,7 +61,6 @@ export class SongsController {
 
       return new StreamableFile(file);
     } catch (error) {
-      console.log(error);
       throw new NotFoundException("File not found");
     }
   }
