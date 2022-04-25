@@ -81,3 +81,11 @@ export const getLyrics = async (songId: string) => {
   });
   return data.data;
 };
+
+export const deleteSong = async (songId: string) => {
+  await api.delete(`/songs/${songId}`, {
+    headers: {
+      Authorization: TokenManager.token,
+    },
+  });
+};

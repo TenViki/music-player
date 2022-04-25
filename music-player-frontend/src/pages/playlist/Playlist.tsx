@@ -48,15 +48,21 @@ const Playlist = () => {
     setPlaylist((prev) => [...prev, song]);
   };
 
+  const handlePlaylistRemove = (song: Song) => {
+    setPlaylist((prev) => prev.filter((s) => s.id !== song.id));
+  };
+
   useEffect(() => {
     if (!socket) return;
     socket.on("device-update", setDevices);
     socket.on("playlist-add", handleplaylistAdd);
+    socket.on("playlist-remove", handlePlaylistRemove);
     socket.emit("get-devices");
 
     return () => {
       socket.off("device-update", setDevices);
       socket.off("playlist-add", handleplaylistAdd);
+      socket.off("playlist-remove", handlePlaylistRemove);
     };
   }, [socket]);
 
@@ -112,6 +118,7 @@ const Playlist = () => {
                 close={dragging}
                 setClosed={setDragging}
                 index={i}
+                songId={song.id}
               >
                 <PlaylistEntry
                   song={song}

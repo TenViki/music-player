@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { FiTrash } from "react-icons/fi";
+import { deleteSong } from "../../api/songs";
 import { usePrevious } from "../../utils/usePrevious";
 import "./playlist-entry-wrapper.scss";
 
@@ -8,6 +9,7 @@ interface PlaylistEntryWrapperProps {
   close: number;
   setClosed: (closed: number) => void;
   index: number;
+  songId: string;
 }
 
 const PlaylistEntryWrapper: React.FC<PlaylistEntryWrapperProps> = ({
@@ -15,6 +17,7 @@ const PlaylistEntryWrapper: React.FC<PlaylistEntryWrapperProps> = ({
   close,
   setClosed,
   index,
+  songId,
 }) => {
   const [currentX, setCurrentX] = React.useState(0);
   const [originX, setOriginX] = React.useState(0);
@@ -53,6 +56,7 @@ const PlaylistEntryWrapper: React.FC<PlaylistEntryWrapperProps> = ({
         className={`plalist-entry-delete ${draggingSelf ? "dragging" : ""} ${
           opened ? "opened" : ""
         }`}
+        onClick={() => deleteSong(songId)}
         style={
           draggingSelf || opened
             ? {
