@@ -86,9 +86,6 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
-      onMouseDown={onTouchStart}
-      onMouseMove={onTouchMove}
-      onMouseUp={onTouchEnd}
     >
       <div
         className={`swipecard-container ${dragging ? "dragging" : ""} ${
