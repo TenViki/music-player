@@ -17,8 +17,7 @@ const PlaylistEntry: React.FC<PlaylistEntryProps> = ({ song, onSelect }) => {
 
     if (
       doParentsHaveClass(target, "dragging") ||
-      !doParentsHaveClass(target, "clickable") ||
-      !doParentsHaveClass(target, "opened")
+      !doParentsHaveClass(target, "clickable")
     )
       return;
 
