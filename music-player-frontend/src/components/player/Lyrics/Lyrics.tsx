@@ -81,8 +81,8 @@ const Lyrics: React.FC<LyricsProps> = ({
     if (deviceId === socket?.id) return;
     if (!lyrics) return;
 
-    setCurrentLyricsIndex(getActiveLyrics(currentTime - latency / 1000));
-  }, [lyrics, currentTime, deviceId, socket]);
+    setCurrentLyricsIndex(getActiveLyrics(currentTime + latency / 1000));
+  }, [lyrics, currentTime, deviceId, socket, latency]);
 
   const handleLatency = (obj: { timestamp: number }) =>
     setLatency(Date.now() - obj.timestamp);
@@ -102,10 +102,6 @@ const Lyrics: React.FC<LyricsProps> = ({
       socket.off("latency", handleLatency);
     };
   }, [socket]);
-
-  useEffect(() => {
-    console.log(latency);
-  }, [latency]);
 
   useEffect(() => {
     lyricsWrapperRef.current?.scrollTo({
