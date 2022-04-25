@@ -74,6 +74,7 @@ const Player: React.FC<PlayerProps> = ({
     if (status.song === "" && status.device) {
       handleChangeSong(null);
       setAvailable(true);
+      setCollapsed(true);
       return;
     }
     if (deviceId !== status.device) setTimeout(() => setCastOpened(false), 300);

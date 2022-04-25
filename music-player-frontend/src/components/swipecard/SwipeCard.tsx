@@ -39,17 +39,29 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
     }
   };
 
-  const onTouchStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
+  const onTouchStart = (
+    e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
+  ) => {
     e.preventDefault();
     if (cardRef.current?.scrollTop || scrollContentRef?.current?.scrollTop)
       return;
-    setOriginY(e.touches[0].clientY);
+
+    // If event is touch
+    if ("touches" in e) {
+      setOriginY(e.touches[0].clientY);
+    } else {
+      setOriginY(e.clientY);
+    }
+
     setDragging(true);
   };
 
-  const onTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
+  const onTouchMove = (
+    e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
+  ) => {
     if (!dragging) return;
-    setCurrentY(e.touches[0].clientY);
+
+    setCurrentY("touches" in e ? e.touches[0].clientY : e.clientY);
 
     const moveScore =
       Math.max(currentY - originY, 0) / (cardRef.current?.clientHeight || 1);
@@ -58,7 +70,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
     }
   };
 
-  const onTouchEnd: React.TouchEventHandler<HTMLDivElement> = (e) => {
+  const onTouchEnd = () => {
     if (!dragging) return;
     setOriginY(0);
     setCurrentY(0);
@@ -78,6 +90,9 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
+      onMouseDown={onTouchStart}
+      onMouseMove={onTouchMove}
+      onMouseUp={onTouchEnd}
     >
       <div
         className={`swipecard-container ${dragging ? "dragging" : ""} ${
