@@ -54,6 +54,31 @@ const Player: React.FC<PlayerProps> = ({
   const audio = React.useRef<HTMLAudioElement>(null);
   const [queueOpened, setQueueOpened] = React.useState(true);
 
+  useEffect(() => {
+    if (!audio) return;
+    navigator.mediaSession.setActionHandler("previoustrack", previousSong);
+    navigator.mediaSession.setActionHandler("nexttrack", nextSong);
+  }, [queue, socket]);
+
+  useEffect(() => {
+    if (!currentSong) return;
+
+    navigator.mediaSession.setPositionState({
+      position: currentTime,
+      duration: currentSong.duration,
+    });
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: currentSong.title,
+      artist: currentSong.artist,
+      artwork: [
+        {
+          src: currentSong.cover,
+        },
+      ],
+    });
+  }, [currentSong]);
+
   const handleCanplaythrough = () => {
     if (!audio.current) return;
     audio.current.currentTime = currentTime;
@@ -265,6 +290,7 @@ const Player: React.FC<PlayerProps> = ({
   useEffect(() => {
     if (!audio.current) return;
     if (deviceId !== socket?.id) return;
+    navigator.mediaSession.playbackState = paused ? "paused" : "playing";
     if (paused) {
       audio.current.pause();
     } else {
