@@ -80,7 +80,6 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
     setPaused(paused);
     if (!socket) return;
 
-    console.log("Emitting pause");
     socket.emit("set-status", {
       status: {
         paused,

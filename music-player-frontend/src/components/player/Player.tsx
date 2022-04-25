@@ -123,11 +123,40 @@ const Player: React.FC<PlayerProps> = ({
     if (audio.current && deviceId !== socket?.id) audio.current.pause();
   };
 
+  const handlePause = () => {
+    if (socket?.id !== deviceId) return;
+    setPaused(true);
+    if (!socket) return;
+
+    socket.emit("set-status", {
+      status: {
+        paused: true,
+      },
+    });
+  };
+
+  const handlePlay = () => {
+    if (socket?.id !== deviceId) return;
+    setPaused(false);
+
+    if (!socket) return;
+
+    socket.emit("set-status", {
+      status: {
+        paused: false,
+      },
+    });
+  };
+
   useEffect(() => {
     audio.current?.addEventListener("timeupdate", handleTimeChange);
+    audio.current?.addEventListener("pause", handlePause);
+    audio.current?.addEventListener("play", handlePlay);
 
     return () => {
       audio.current?.removeEventListener("timeupdate", handleTimeChange);
+      audio.current?.removeEventListener("pause", handlePause);
+      audio.current?.removeEventListener("play", handlePlay);
     };
   }, [audio, deviceId, socket]);
 
