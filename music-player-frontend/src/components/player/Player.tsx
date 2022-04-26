@@ -173,16 +173,16 @@ const Player: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     audio.current?.addEventListener("timeupdate", handleTimeChange);
-    audio.current?.addEventListener("pause", handlePause);
-    audio.current?.addEventListener("play", handlePlay);
+    // audio.current?.addEventListener("pause", handlePause);
+    // audio.current?.addEventListener("play", handlePlay);
 
     navigator.mediaSession.setActionHandler("pause", handlePause);
     navigator.mediaSession.setActionHandler("play", handlePlay);
 
     return () => {
       audio.current?.removeEventListener("timeupdate", handleTimeChange);
-      audio.current?.removeEventListener("pause", handlePause);
-      audio.current?.removeEventListener("play", handlePlay);
+      // audio.current?.removeEventListener("pause", handlePause);
+      // audio.current?.removeEventListener("play", handlePlay);
     };
   }, [audio, deviceId, socket, available, paused]);
 
