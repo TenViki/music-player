@@ -241,6 +241,7 @@ const Player: React.FC<PlayerProps> = ({
     if (device === socket?.id) {
       if (!currentSong || !audio.current) return;
       audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
+      audio.current.load();
       audio.current.play();
     } else {
       audio.current?.pause();
