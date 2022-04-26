@@ -9,8 +9,8 @@ async function bootstrap() {
     console.log("Starting app in production mode");
 
     httpsOptions = {
-      key: fs.readFileSync("./secrets/private-key.pem"),
-      cert: fs.readFileSync("./secrets/public-certificate.pem"),
+      key: fs.readFileSync(process.env.PATH_TO_KEY),
+      cert: fs.readFileSync(process.env.PATH_TO_CERT),
     };
   }
 
