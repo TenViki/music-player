@@ -145,8 +145,11 @@ const Player: React.FC<PlayerProps> = ({
     if (audio.current && deviceId !== socket?.id) audio.current.pause();
   };
 
-  const handlePause = () => {
+  const handlePause = (e: any) => {
+    console.log("-------------------------------");
     if (socket?.id !== deviceId) return;
+
+    console.log("Set paused true", e);
     if (!paused) setPaused(true);
     if (!socket || !available) return;
 
@@ -157,9 +160,10 @@ const Player: React.FC<PlayerProps> = ({
     });
   };
 
-  const handlePlay = () => {
+  const handlePlay = (e: any) => {
     if (socket?.id !== deviceId || !available) return;
     if (paused) setPaused(false);
+    console.log("Set paused false", e);
 
     if (!socket) return;
 
@@ -174,6 +178,9 @@ const Player: React.FC<PlayerProps> = ({
     audio.current?.addEventListener("timeupdate", handleTimeChange);
     audio.current?.addEventListener("pause", handlePause);
     audio.current?.addEventListener("play", handlePlay);
+
+    navigator.mediaSession.setActionHandler("pause", handlePause);
+    navigator.mediaSession.setActionHandler("play", handlePlay);
 
     return () => {
       audio.current?.removeEventListener("timeupdate", handleTimeChange);
@@ -285,10 +292,15 @@ const Player: React.FC<PlayerProps> = ({
   useEffect(() => {
     if (!audio.current) return;
     if (deviceId !== socket?.id) return;
-    navigator.mediaSession.playbackState = paused ? "paused" : "playing";
-    if (paused && !audio.current.paused) {
+    // navigator.mediaSession.playbackState = paused ? "paused" : "playing";
+
+    console.log("Paused changed: ", paused);
+
+    if (paused) {
+      console.log("Making audio pause");
       audio.current.pause();
     } else {
+      console.log("Making audio play");
       audio.current.play();
     }
   }, [paused, deviceId, socket]);
