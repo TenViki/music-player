@@ -147,7 +147,7 @@ const Player: React.FC<PlayerProps> = ({
 
   const handlePause = () => {
     if (socket?.id !== deviceId) return;
-    setPaused(true);
+    if (!paused) setPaused(true);
     if (!socket || !available) return;
 
     socket.emit("set-status", {
@@ -159,7 +159,7 @@ const Player: React.FC<PlayerProps> = ({
 
   const handlePlay = () => {
     if (socket?.id !== deviceId || !available) return;
-    setPaused(false);
+    if (paused) setPaused(false);
 
     if (!socket) return;
 
@@ -180,7 +180,7 @@ const Player: React.FC<PlayerProps> = ({
       audio.current?.removeEventListener("pause", handlePause);
       audio.current?.removeEventListener("play", handlePlay);
     };
-  }, [audio, deviceId, socket, available]);
+  }, [audio, deviceId, socket, available, paused]);
 
   // Next song function
   const nextSong = () => {
@@ -286,7 +286,7 @@ const Player: React.FC<PlayerProps> = ({
     if (!audio.current) return;
     if (deviceId !== socket?.id) return;
     navigator.mediaSession.playbackState = paused ? "paused" : "playing";
-    if (paused) {
+    if (paused && !audio.current.paused) {
       audio.current.pause();
     } else {
       audio.current.play();
