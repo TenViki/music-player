@@ -224,33 +224,39 @@ const Player: React.FC<PlayerProps> = ({
 
   // When current song is changed, make it src of audio and all this kind of stuff
   useEffect(() => {
-    if (currentSong === prevValues?.currentSong) return;
+    const func = async () => {
+      if (currentSong === prevValues?.currentSong) return;
 
-    const device =
-      deviceId && devices.find((d) => d.id === deviceId)
-        ? deviceId
-        : socket?.id;
-    socket?.emit("set-status", {
-      status: { song: currentSong?.id, device },
-    });
-    setAvailable(false);
+      const device =
+        deviceId && devices.find((d) => d.id === deviceId)
+          ? deviceId
+          : socket?.id;
+      socket?.emit("set-status", {
+        status: { song: currentSong?.id, device },
+      });
+      setAvailable(false);
 
-    if (device === socket?.id) {
-      if (!currentSong || !audio.current) return;
-      audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
-      audio.current.load();
-      audio.current.play();
-    } else {
-      audio.current?.pause();
-    }
-    setCurrentTime(0);
-    setPaused(false);
+      if (device === socket?.id) {
+        if (!currentSong || !audio.current) return;
+        audio.current.pause();
+        audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
+        // wait a bit
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        audio.current.play();
+      } else {
+        audio.current?.pause();
+      }
+      setCurrentTime(0);
+      setPaused(false);
 
-    if (shuffle) {
-      setQueue(processPlaylist([...queue, prevValues!.currentSong!]));
-    } else {
-      setQueue(processPlaylist(playlist));
-    }
+      if (shuffle) {
+        setQueue(processPlaylist([...queue, prevValues!.currentSong!]));
+      } else {
+        setQueue(processPlaylist(playlist));
+      }
+    };
+
+    func();
   }, [currentSong, shuffle, playlist, queue, socket, deviceId]);
 
   // Every second update current time
