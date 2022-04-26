@@ -46,8 +46,6 @@ export class SpotifyService implements OnApplicationBootstrap {
         );
       }
     }
-
-    console.log("Refreshed spotify access token", this.accessToken);
   }
 
   async search(query: string) {
