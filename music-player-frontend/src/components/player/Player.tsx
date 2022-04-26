@@ -68,7 +68,7 @@ const Player: React.FC<PlayerProps> = ({
       artist: currentSong.artist,
       artwork: [
         {
-          src: currentSong.cover,
+          src: currentSong?.cover,
         },
       ],
     });
@@ -384,7 +384,7 @@ const Player: React.FC<PlayerProps> = ({
         {currentSong?.cover && (
           <img
             className="player-background-image"
-            src={currentSong.cover}
+            src={currentSong?.cover}
             alt={currentSong.title}
           />
         )}
