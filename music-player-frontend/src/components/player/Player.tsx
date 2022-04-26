@@ -146,10 +146,8 @@ const Player: React.FC<PlayerProps> = ({
   };
 
   const handlePause = (e: any) => {
-    console.log("-------------------------------");
     if (socket?.id !== deviceId) return;
 
-    console.log("Set paused true", e);
     if (!paused) setPaused(true);
     if (!socket || !available) return;
 
@@ -163,7 +161,6 @@ const Player: React.FC<PlayerProps> = ({
   const handlePlay = (e: any) => {
     if (socket?.id !== deviceId || !available) return;
     if (paused) setPaused(false);
-    console.log("Set paused false", e);
 
     if (!socket) return;
 
@@ -295,13 +292,9 @@ const Player: React.FC<PlayerProps> = ({
     if (deviceId !== socket?.id) return;
     // navigator.mediaSession.playbackState = paused ? "paused" : "playing";
 
-    console.log("Paused changed: ", paused);
-
     if (paused) {
-      console.log("Making audio pause");
       audio.current.pause();
     } else {
-      console.log("Making audio play");
       audio.current.play();
     }
   }, [paused, deviceId, socket]);
