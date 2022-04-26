@@ -41,7 +41,7 @@ function App() {
     if (user) navigate("/playlist");
 
     if (!user || socket?.connected) return;
-    const socketObj = io("http://10.0.0.16:5000");
+    const socketObj = io(import.meta.env.VITE_SOCKET_URL);
 
     socketObj.on("auth-success", (data) => {
       console.log("Socket authorized!", data);

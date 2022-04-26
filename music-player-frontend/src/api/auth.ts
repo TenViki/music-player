@@ -1,7 +1,7 @@
 import axios from "axios";
 import { TokenManager } from "../utils/tokenmanager";
 
-export const BACKEND_URL = "http://10.0.0.16:5000";
+export const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 export const api = axios.create({
   baseURL: BACKEND_URL,
