@@ -41,7 +41,10 @@ function App() {
     if (user) navigate("/playlist");
 
     if (!user || socket?.connected) return;
-    const socketObj = io(import.meta.env.VITE_SOCKET_URL);
+    const socketObj = io(import.meta.env.VITE_API_URL, {
+      path: import.meta.env.VITE_SOCKET_PATH,
+    });
+    console.log(socketObj);
 
     socketObj.on("auth-success", (data) => {
       console.log("Socket authorized!", data);

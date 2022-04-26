@@ -62,6 +62,7 @@ export class SongsGateway implements OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
     @MessageBody("token") token: string,
   ) {
+    console.log("Auth", token);
     if (!token) return wsError("No token provided");
     let userId: string;
     try {
@@ -92,6 +93,7 @@ export class SongsGateway implements OnGatewayDisconnect {
         paused: false,
       });
 
+    console.log("Success'd");
     return {
       event: "auth-success",
       data: user.name,

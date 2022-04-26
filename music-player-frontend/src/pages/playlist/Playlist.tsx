@@ -67,19 +67,12 @@ const Playlist = () => {
   }, [socket]);
 
   useEffect(() => {
-    console.info(
-      "Current song changed",
-      currentSong?.id,
-      prev?.currentSong?.id,
-      available
-    );
     if (
       !available ||
       currentSong !== prev?.currentSong ||
       currentSong?.id === next?.id
     )
       return;
-    console.info("SETTING LAST SONG TO", currentSong?.title);
     if (!next) socket?.emit("set-status", { status: { song: "" } });
     setLastSong(currentSong);
     setTimeout(() => setCurrentSong(next), 10);
@@ -118,13 +111,10 @@ const Playlist = () => {
                 close={dragging}
                 setClosed={setDragging}
                 index={i}
+                key={song.id}
                 songId={song.id}
               >
-                <PlaylistEntry
-                  song={song}
-                  key={song.id}
-                  onSelect={handleChangeSong}
-                />
+                <PlaylistEntry song={song} onSelect={handleChangeSong} />
               </PlaylistEntryWrapper>
             ))}
             <Button
