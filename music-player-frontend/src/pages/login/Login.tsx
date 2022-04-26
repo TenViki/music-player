@@ -107,7 +107,7 @@ const Login = () => {
               placeholder="Enter your email address"
               value={email}
               error={
-                loginError.toLowerCase().includes("user")
+                loginError?.toLowerCase()?.includes("user")
                   ? loginError
                   : undefined
               }
@@ -119,7 +119,7 @@ const Login = () => {
               value={password}
               type="password"
               error={
-                loginError.toLowerCase().includes("password")
+                loginError?.toLowerCase()?.includes("password")
                   ? loginError
                   : undefined
               }
@@ -151,8 +151,8 @@ const Login = () => {
               placeholder="Enter your email address"
               value={email}
               error={
-                singupError.toLowerCase().includes("email") ||
-                singupError.toLowerCase().includes("user")
+                singupError?.toLowerCase()?.includes("email") ||
+                singupError?.toLowerCase()?.includes("user")
                   ? singupError
                   : undefined
               }
@@ -163,7 +163,7 @@ const Login = () => {
               placeholder="Enter your username"
               value={username}
               error={
-                singupError.toLowerCase().includes("username")
+                singupError?.toLowerCase()?.includes("username")
                   ? singupError
                   : undefined
               }
@@ -175,7 +175,7 @@ const Login = () => {
               value={password}
               type="password"
               error={
-                singupError.toLowerCase().includes("password")
+                singupError?.toLowerCase()?.includes("password")
                   ? singupError
                   : undefined
               }

@@ -60,7 +60,7 @@ function App() {
   }, [user]);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !user) return;
 
     // Get system name (for example: "Redmi note 8")
     const deviceAx = navigator?.userAgent?.match(/\(([^)]+)\)/);
@@ -73,7 +73,7 @@ function App() {
       name: deviceName,
       type: deviceType,
     });
-  }, [socket]);
+  }, [socket, user]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
