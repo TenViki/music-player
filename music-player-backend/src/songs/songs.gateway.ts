@@ -32,7 +32,7 @@ interface Status {
   paused: boolean;
 }
 
-@WebSocketGateway({ cors: "*" })
+@WebSocketGateway({ allowEIO3: true, cors: { origin: ["http://10.0.0.100:4173"] }  })
 export class SongsGateway implements OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   private clients: Map<string, User> = new Map();
