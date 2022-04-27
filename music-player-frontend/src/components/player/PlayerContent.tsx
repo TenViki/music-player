@@ -32,6 +32,8 @@ interface PlayerContentProps {
   setVolume: (volume: number) => void;
   nextSong: () => void;
   previousSong: () => void;
+  pausedBtn: boolean;
+  handlePause: (pausedBtn: boolean) => void;
 }
 
 const PlayerContent: React.FC<PlayerContentProps> = ({
@@ -51,6 +53,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
   setVolume,
   nextSong,
   previousSong,
+  pausedBtn,
+  handlePause,
 }) => {
   const socket = React.useContext(SocketContext);
 
@@ -72,17 +76,6 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
     socket.emit("set-status", {
       status: {
         repeat,
-      },
-    });
-  };
-
-  const updatePaused = (paused: boolean) => {
-    setPaused(paused);
-    if (!socket) return;
-
-    socket.emit("set-status", {
-      status: {
-        paused,
       },
     });
   };
@@ -157,9 +150,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         </div>
         <div
           className="player-controls-icon main"
-          onClick={() => updatePaused(!paused)}
+          onClick={() => handlePause(!pausedBtn)}
         >
-          {paused ? <IoPlay /> : <IoPause />}
+          {pausedBtn ? <IoPlay /> : <IoPause />}
         </div>
         <div className="player-controls-icon" onClick={nextSong}>
           <FiChevronRight />

@@ -54,6 +54,8 @@ const Player: React.FC<PlayerProps> = ({
   const audio = React.useRef<HTMLAudioElement>(null);
   const [queueOpened, setQueueOpened] = React.useState(true);
 
+  const [pausedBtn, setPausedBtn] = React.useState(false);
+
   useEffect(() => {
     if (!audio) return;
     navigator.mediaSession.setActionHandler("previoustrack", previousSong);
@@ -77,7 +79,7 @@ const Player: React.FC<PlayerProps> = ({
   const handleCanplaythrough = () => {
     if (!audio.current) return;
     audio.current.currentTime = currentTime;
-    audio.current.play();
+    if (!paused) audio.current.play();
     audio.current.removeEventListener("canplaythrough", handleCanplaythrough);
   };
 
@@ -139,16 +141,17 @@ const Player: React.FC<PlayerProps> = ({
       socket.off("status-update", handleStatusUpdate);
       socket.off("time-update", handleTimeUpdate);
     };
-  }, [socket, playlist, deviceId, tapped, currentTime]);
+  }, [socket, playlist, deviceId, tapped, currentTime, paused]);
 
   const handleTimeChange = () => {
     if (audio.current && deviceId !== socket?.id) audio.current.pause();
   };
 
-  const handlePause = (e: any) => {
+  const handlePause = () => {
+    console.log(socket?.id, deviceId, paused);
     if (socket?.id !== deviceId) return;
 
-    if (!paused) setPaused(true);
+    setPaused(true);
     if (!socket || !available) return;
 
     socket.emit("set-status", {
@@ -158,9 +161,10 @@ const Player: React.FC<PlayerProps> = ({
     });
   };
 
-  const handlePlay = (e: any) => {
+  const handlePlay = () => {
+    console.log("Hande play colled");
     if (socket?.id !== deviceId || !available) return;
-    if (paused) setPaused(false);
+    setPaused(false);
 
     if (!socket) return;
 
@@ -173,16 +177,11 @@ const Player: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     audio.current?.addEventListener("timeupdate", handleTimeChange);
-    // audio.current?.addEventListener("pause", handlePause);
-    // audio.current?.addEventListener("play", handlePlay);
-
     navigator.mediaSession.setActionHandler("pause", handlePause);
     navigator.mediaSession.setActionHandler("play", handlePlay);
 
     return () => {
       audio.current?.removeEventListener("timeupdate", handleTimeChange);
-      // audio.current?.removeEventListener("pause", handlePause);
-      // audio.current?.removeEventListener("play", handlePlay);
     };
   }, [audio, deviceId, socket, available, paused]);
 
@@ -242,12 +241,15 @@ const Player: React.FC<PlayerProps> = ({
         audio.current.src = `${BACKEND_URL}/songs/${currentSong.file}`;
         // wait a bit
         await new Promise((resolve) => setTimeout(resolve, 100));
-        audio.current.play();
+        console.log("Current paused state: ", paused);
+        if (!paused) audio.current.play();
       } else {
         audio.current?.pause();
       }
       setCurrentTime(0);
-      setPaused(false);
+
+      if (!paused) setPausedBtn(false);
+      if (!paused) handlePlay();
 
       if (shuffle) {
         setQueue(processPlaylist([...queue, prevValues!.currentSong!]));
@@ -257,7 +259,7 @@ const Player: React.FC<PlayerProps> = ({
     };
 
     func();
-  }, [currentSong, shuffle, playlist, queue, socket, deviceId]);
+  }, [currentSong, shuffle, playlist, queue, socket, deviceId, paused]);
 
   // Every second update current time
   useEffect(() => {
@@ -285,22 +287,33 @@ const Player: React.FC<PlayerProps> = ({
     }
   };
 
+  const handleAudioPlay = () => setPausedBtn(false);
+  const handleAudioPause = () => setPausedBtn(true);
+
   // Adds even listeners to audio
   useEffect(() => {
     audio.current?.addEventListener("ended", handleEnd);
+    audio.current?.addEventListener("play", handleAudioPlay);
+    audio.current?.addEventListener("pause", handleAudioPause);
 
-    return () => audio.current?.removeEventListener("ended", handleEnd);
+    return () => {
+      audio.current?.removeEventListener("ended", handleEnd);
+      audio.current?.removeEventListener("play", handleAudioPlay);
+      audio.current?.removeEventListener("pause", handleAudioPause);
+    };
   }, [audio, repeat, queue]);
 
   // When paused state is changed, update audio
   useEffect(() => {
+    setPausedBtn(paused);
     if (!audio.current) return;
     if (deviceId !== socket?.id) return;
-    // navigator.mediaSession.playbackState = paused ? "paused" : "playing";
+    navigator.mediaSession.playbackState = paused ? "paused" : "playing";
 
     if (paused) {
       audio.current.pause();
     } else {
+      console.log("Playing audio due to something");
       audio.current.play();
     }
   }, [paused, deviceId, socket]);
@@ -357,6 +370,13 @@ const Player: React.FC<PlayerProps> = ({
       );
   }, [shuffle, currentSong]);
 
+  const handlePauseButtonClick = (b: boolean) => {
+    console.log(b);
+    if (b) handlePause();
+    else handlePlay();
+    setPausedBtn(b);
+  };
+
   if (!currentSong)
     return (
       <div
@@ -399,9 +419,9 @@ const Player: React.FC<PlayerProps> = ({
             <div className="player-header-info">{currentSong?.title}</div>
             <div
               className="player-header-controls"
-              onClick={() => updatePaused(!paused)}
+              onClick={() => handlePauseButtonClick(!pausedBtn)}
             >
-              {paused ? <IoPlay /> : <IoPause />}
+              {pausedBtn ? <IoPlay /> : <IoPause />}
             </div>
           </div>
           <div className="player-header-progress">
@@ -463,6 +483,8 @@ const Player: React.FC<PlayerProps> = ({
             setVolume={setVolume}
             nextSong={nextSong}
             previousSong={previousSong}
+            handlePause={handlePauseButtonClick}
+            pausedBtn={pausedBtn}
           />
         )}
         <div className={`player-slider ${queueOpened ? "" : "switched"}`}>
