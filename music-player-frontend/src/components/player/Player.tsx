@@ -148,31 +148,31 @@ const Player: React.FC<PlayerProps> = ({
   };
 
   const handlePause = () => {
-    console.log(socket?.id, deviceId, paused);
-    if (socket?.id !== deviceId) return;
+    if (socket?.id && deviceId && available) {
+      setPaused(true);
+    }
 
-    setPaused(true);
-    if (!socket || !available) return;
-
-    socket.emit("set-status", {
-      status: {
-        paused: true,
-      },
-    });
+    if (socket && available) {
+      socket.emit("set-status", {
+        status: {
+          paused: true,
+        },
+      });
+    }
   };
 
   const handlePlay = () => {
-    console.log("Hande play colled");
-    if (socket?.id !== deviceId || !available) return;
-    setPaused(false);
+    if (socket?.id && deviceId && available) {
+      setPaused(false);
+    }
 
-    if (!socket) return;
-
-    socket.emit("set-status", {
-      status: {
-        paused: false,
-      },
-    });
+    if (socket && available) {
+      socket.emit("set-status", {
+        status: {
+          paused: false,
+        },
+      });
+    }
   };
 
   useEffect(() => {
