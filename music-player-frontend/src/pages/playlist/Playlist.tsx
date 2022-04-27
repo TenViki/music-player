@@ -75,7 +75,7 @@ const Playlist = () => {
       return;
     if (!next) socket?.emit("set-status", { status: { song: "" } });
     setLastSong(currentSong);
-    setTimeout(() => setCurrentSong(next), 10);
+    setTimeout(() => setCurrentSong(next), 100);
   }, [next, available, currentSong, socket]);
 
   return (

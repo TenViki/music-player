@@ -248,8 +248,8 @@ const Player: React.FC<PlayerProps> = ({
       }
       setCurrentTime(0);
 
-      if (!paused) setPausedBtn(false);
-      if (!paused) handlePlay();
+      setPausedBtn(false);
+      handlePlay();
 
       if (shuffle) {
         setQueue(processPlaylist([...queue, prevValues!.currentSong!]));
@@ -323,7 +323,7 @@ const Player: React.FC<PlayerProps> = ({
     setInTransition(true);
     setTimeout(() => {
       setInTransition(false);
-    }, 550);
+    }, 800);
   }, [lastSong]);
 
   const handleProgressUp = () => {
